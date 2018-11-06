@@ -1,0 +1,113 @@
+commit ef37a78ed00009b34ade78ef0adbccc189deb4a0
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:48:21 2018 +0200
+
+    Changed some files
+
+ tiedostoja/file2             | 1 -
+ tiedostoja/{file1 => file22} | 0
+ 2 files changed, 1 deletion(-)
+
+commit b9cc9d2dc7df5c3c8b209d9bda42305816b59973
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:45:42 2018 +0200
+
+    Added tiedostoja
+
+ tiedostoja/file1 | 1 +
+ tiedostoja/file2 | 1 +
+ tiedostoja/file3 | 1 +
+ 3 files changed, 3 insertions(+)
+
+commit 52a19227068797c66b6d1a853c0f0230d6b16b12
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:40:54 2018 +0200
+
+    Edited eka and kolmas
+
+ eka.txt    | 6 +++---
+ kolmas.txt | 4 +++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+commit 4d4d5e22586db1a369ebe5b8df44ba36aa446b95
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:37:42 2018 +0200
+
+    Renamed tiedosto to eka
+
+ tiedosto.txt => eka.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit a993a7b67e351f5491ae511ec7dbe3886d550b4f
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:36:21 2018 +0200
+
+    Removed toinen
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 088753733847d9cb1801f37c38309f2b544ebb05
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:34:52 2018 +0200
+
+    Edited tiedosto
+
+ tiedosto.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 27f0d6eaf633a584701e573e13ad47b886a257f5
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:33:40 2018 +0200
+
+    Added text to tiedosto
+
+ tiedosto.txt | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit c2cdc16c3842d4925ba5509256b041f668e38d41
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:32:35 2018 +0200
+
+    added stuff/jokin
+
+ stuff/jokin | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d87a64b5763e0a8f8e58856112f458660eff38c4
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:31:38 2018 +0200
+
+    Changed toinen and kolmas
+
+ kolmas.txt | 2 +-
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+commit 81d2cfa2786b0b382b8bfa34cf0fd0ceba2f0f71
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:29:45 2018 +0200
+
+    Added kolmas.txt
+
+ kolmas.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 02f20f96442b0a517319c23dc23adfa942396b72
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:12:01 2018 +0200
+
+    Modified and added.
+
+ tiedosto.txt | 2 +-
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+commit 622a1b486092199e6ff001fde46264c7d340ba19
+Author: Tuupertunut <superemppu@live.fi>
+Date:   Tue Nov 6 01:09:41 2018 +0200
+
+    Created tiedosto.txt
+
+ tiedosto.txt | 1 +
+ 1 file changed, 1 insertion(+)
