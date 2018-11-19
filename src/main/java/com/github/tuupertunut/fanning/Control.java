@@ -29,4 +29,25 @@ package com.github.tuupertunut.fanning;
  */
 public interface Control {
 
+    Sensor getSensor();
+
+    String getName();
+
+    String getId();
+
+    String getSensorType();
+
+    String getMeasurementUnit();
+
+    double getValue();
+
+    boolean isSoftwareControlled();
+
+    double getMinSoftwareControlValue();
+
+    double getMaxSoftwareControlValue();
+
+    void setSoftwareControl(double value);
+
+    void setDefaultControl();
 }

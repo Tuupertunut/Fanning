@@ -29,4 +29,13 @@ package com.github.tuupertunut.fanning;
  */
 public interface Sensor {
 
+    String getName();
+
+    String getId();
+
+    String getSensorType();
+
+    String getMeasurementUnit();
+
+    double getValue();
 }
