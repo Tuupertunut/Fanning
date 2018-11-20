@@ -41,7 +41,7 @@ public class MockHardwareManager implements HardwareManager {
     public MockHardwareManager() {
         MockSensor sa = new MockSensor("sensor a", "sa", "Temperature", "°C");
         MockSensor sb = new MockSensor("sensor b", "sb", "Temperature", "°C");
-        MockSensor sc = new MockSensor("sensor c", "sa", "Voltage", "V");
+        MockSensor sc = new MockSensor("sensor c", "sc", "Voltage", "V");
         MockHardwareItem ha = new MockHardwareItem(Arrays.asList(), Arrays.asList(sa, sb, sc), Arrays.asList(), "hardware a", "ha");
 
         MockSensor sd = new MockSensor("sensor d", "sd", "Fan speed", "RPM");
