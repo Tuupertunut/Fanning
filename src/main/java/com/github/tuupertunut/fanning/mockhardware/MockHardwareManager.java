@@ -36,7 +36,13 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class MockHardwareManager implements HardwareManager {
 
-    HardwareItem hwRoot;
+    Optional<HardwareItem> hwRoot;
+
+    public MockHardwareManager(Optional<HardwareItem> hwRoot) {
+        this.hwRoot = hwRoot;
+
+        updateHardwareTree();
+    }
 
     public MockHardwareManager() {
         MockSensor sa = new MockSensor("sensor a", "sa", "Temperature", "°C");
@@ -48,7 +54,9 @@ public class MockHardwareManager implements HardwareManager {
         MockSensor se = new MockSensor("sensor e", "se", "Voltage", "V");
         MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sd, se), Arrays.asList(), "hardware b", "hb");
 
-        hwRoot = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
+        HardwareItem root = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
+
+        hwRoot = Optional.of(root);
 
         updateHardwareTree();
     }
@@ -62,6 +70,6 @@ public class MockHardwareManager implements HardwareManager {
 
     @Override
     public Optional<HardwareItem> getHardwareRoot() {
-        return Optional.of(hwRoot);
+        return hwRoot;
     }
 }
