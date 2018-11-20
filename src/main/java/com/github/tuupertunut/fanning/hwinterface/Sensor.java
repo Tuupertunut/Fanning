@@ -21,23 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
-
-import java.util.List;
+package com.github.tuupertunut.fanning.hwinterface;
 
 /**
  *
  * @author Tuupertunut
  */
-public interface HardwareItem {
-
-    List<HardwareItem> getSubHardware();
-
-    List<Sensor> getSensors();
-
-    List<Control> getControls();
+public interface Sensor {
 
     String getName();
 
     String getId();
+
+    String getSensorType();
+
+    String getMeasurementUnit();
+
+    double getValue();
 }

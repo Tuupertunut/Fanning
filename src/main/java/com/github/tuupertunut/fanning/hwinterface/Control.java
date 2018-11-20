@@ -21,21 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
+package com.github.tuupertunut.fanning.hwinterface;
 
 /**
  *
  * @author Tuupertunut
  */
-public interface Sensor {
+public interface Control {
 
-    String getName();
+    Sensor getSensor();
 
-    String getId();
+    default String getName() {
+        return getSensor().getName();
+    }
 
-    String getSensorType();
+    default String getId() {
+        return getSensor().getId();
+    }
 
-    String getMeasurementUnit();
+    default String getSensorType() {
+        return getSensor().getSensorType();
+    }
 
-    double getValue();
+    default String getMeasurementUnit() {
+        return getSensor().getMeasurementUnit();
+    }
+
+    default double getValue() {
+        return getSensor().getValue();
+    }
+
+    boolean isSoftwareControlled();
+
+    double getMinSoftwareControlValue();
+
+    double getMaxSoftwareControlValue();
+
+    void setSoftwareControl(double value);
+
+    void setDefaultControl();
 }

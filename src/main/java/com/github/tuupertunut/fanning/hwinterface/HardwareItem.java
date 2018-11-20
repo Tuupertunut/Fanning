@@ -21,43 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
+package com.github.tuupertunut.fanning.hwinterface;
+
+import java.util.List;
 
 /**
  *
  * @author Tuupertunut
  */
-public interface Control {
+public interface HardwareItem {
 
-    Sensor getSensor();
+    List<HardwareItem> getSubHardware();
 
-    default String getName() {
-        return getSensor().getName();
-    }
+    List<Sensor> getSensors();
 
-    default String getId() {
-        return getSensor().getId();
-    }
+    List<Control> getControls();
 
-    default String getSensorType() {
-        return getSensor().getSensorType();
-    }
+    String getName();
 
-    default String getMeasurementUnit() {
-        return getSensor().getMeasurementUnit();
-    }
-
-    default double getValue() {
-        return getSensor().getValue();
-    }
-
-    boolean isSoftwareControlled();
-
-    double getMinSoftwareControlValue();
-
-    double getMaxSoftwareControlValue();
-
-    void setSoftwareControl(double value);
-
-    void setDefaultControl();
+    String getId();
 }
