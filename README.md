@@ -13,3 +13,15 @@
 ```
 java -jar target/Fanning-*version here*.jar
 ```
+
+### Run tests
+
+```
+mvn test
+```
+
+### Generate test coverage report
+
+```
+mvn test jacoco:report
+```
