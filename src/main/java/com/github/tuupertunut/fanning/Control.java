@@ -31,15 +31,25 @@ public interface Control {
 
     Sensor getSensor();
 
-    String getName();
+    default String getName() {
+        return getSensor().getName();
+    }
 
-    String getId();
+    default String getId() {
+        return getSensor().getId();
+    }
 
-    String getSensorType();
+    default String getSensorType() {
+        return getSensor().getSensorType();
+    }
 
-    String getMeasurementUnit();
+    default String getMeasurementUnit() {
+        return getSensor().getMeasurementUnit();
+    }
 
-    double getValue();
+    default double getValue() {
+        return getSensor().getValue();
+    }
 
     boolean isSoftwareControlled();
 

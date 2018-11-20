@@ -23,6 +23,9 @@
  */
 package com.github.tuupertunut.fanning;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +39,84 @@ public interface HardwareManager {
 
     Optional<HardwareItem> getHardwareRoot();
 
-    List<Sensor> getAllSensors();
+    default List<Sensor> getAllSensors() {
+        List<Sensor> sensors = new ArrayList<>();
 
-    List<Control> getAllControls();
+        if (getHardwareRoot().isPresent()) {
+            HardwareItem hardwareRoot = getHardwareRoot().get();
 
-    List<HardwareItem> getAllHardware();
+            /* Depth first search for tree using a stack. */
+            Deque<HardwareItem> depthFirstStack = new ArrayDeque<>();
+            depthFirstStack.push(hardwareRoot);
+
+            while (!depthFirstStack.isEmpty()) {
+
+                /* Pop a node from the stack and process it. */
+                HardwareItem hw = depthFirstStack.pop();
+                sensors.addAll(hw.getSensors());
+
+                /* Add children of the node to the stack. */
+                for (int i = hw.getSubHardware().size() - 1; i >= 0; i--) {
+                    HardwareItem subHw = hw.getSubHardware().get(i);
+                    depthFirstStack.push(subHw);
+                }
+            }
+        }
+
+        return sensors;
+    }
+
+    default List<Control> getAllControls() {
+        List<Control> controls = new ArrayList<>();
+
+        if (getHardwareRoot().isPresent()) {
+            HardwareItem hardwareRoot = getHardwareRoot().get();
+
+            /* Depth first search for tree using a stack. */
+            Deque<HardwareItem> depthFirstStack = new ArrayDeque<>();
+            depthFirstStack.push(hardwareRoot);
+
+            while (!depthFirstStack.isEmpty()) {
+
+                /* Pop a node from the stack and process it. */
+                HardwareItem hw = depthFirstStack.pop();
+                controls.addAll(hw.getControls());
+
+                /* Add children of the node to the stack. */
+                for (int i = hw.getSubHardware().size() - 1; i >= 0; i--) {
+                    HardwareItem subHw = hw.getSubHardware().get(i);
+                    depthFirstStack.push(subHw);
+                }
+            }
+        }
+
+        return controls;
+    }
+
+    default List<HardwareItem> getAllHardware() {
+        List<HardwareItem> hardware = new ArrayList<>();
+
+        if (getHardwareRoot().isPresent()) {
+            HardwareItem hardwareRoot = getHardwareRoot().get();
+
+            /* Depth first search for tree using a stack. */
+            Deque<HardwareItem> depthFirstStack = new ArrayDeque<>();
+            depthFirstStack.push(hardwareRoot);
+
+            while (!depthFirstStack.isEmpty()) {
+
+                /* Pop a node from the stack and process it. */
+                HardwareItem hw = depthFirstStack.pop();
+                hardware.add(hw);
+
+                /* Add children of the node to the stack. */
+                for (int i = hw.getSubHardware().size() - 1; i >= 0; i--) {
+                    HardwareItem subHw = hw.getSubHardware().get(i);
+                    depthFirstStack.push(subHw);
+                }
+            }
+        }
+
+        return hardware;
+    }
 }
