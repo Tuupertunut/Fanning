@@ -24,6 +24,9 @@
 package com.github.tuupertunut.fanning.mockhardware;
 
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableDoubleValue;
 
 /**
  *
@@ -35,13 +38,15 @@ public class MockSensor implements Sensor {
     String id;
     String sensorType;
     String measurementUnit;
-    double value;
+    DoubleProperty value;
 
     public MockSensor(String name, String id, String sensorType, String measurementUnit) {
         this.name = name;
         this.id = id;
         this.sensorType = sensorType;
         this.measurementUnit = measurementUnit;
+
+        value = new SimpleDoubleProperty();
     }
 
     @Override
@@ -65,7 +70,7 @@ public class MockSensor implements Sensor {
     }
 
     @Override
-    public double getValue() {
+    public ObservableDoubleValue valueProperty() {
         return value;
     }
 }

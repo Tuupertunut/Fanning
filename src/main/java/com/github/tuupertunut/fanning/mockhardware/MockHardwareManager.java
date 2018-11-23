@@ -64,7 +64,7 @@ public class MockHardwareManager implements HardwareManager {
     @Override
     public void updateHardwareTree() {
         for (Sensor sensor : getAllSensors()) {
-            ((MockSensor) sensor).value = ThreadLocalRandom.current().nextInt(30, 50);
+            ((MockSensor) sensor).value.set(ThreadLocalRandom.current().nextInt(30, 50));
         }
     }
 

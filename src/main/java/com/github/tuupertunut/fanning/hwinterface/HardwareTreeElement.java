@@ -21,33 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
-
-import com.github.tuupertunut.fanning.hwinterface.Sensor;
+package com.github.tuupertunut.fanning.hwinterface;
 
 /**
  *
  * @author Tuupertunut
  */
-public class SensorWrapper implements SensorOrHardwareItemWrapper {
+public interface HardwareTreeElement {
 
-    private final Sensor sensor;
+    String getId();
 
-    public SensorWrapper(Sensor sensor) {
-        this.sensor = sensor;
-    }
-
-    public Sensor getSensor() {
-        return sensor;
-    }
-
-    @Override
-    public String getName() {
-        return sensor.getName();
-    }
-
-    @Override
-    public String getValue() {
-        return Double.toString(sensor.getValue());
-    }
+    String getName();
 }

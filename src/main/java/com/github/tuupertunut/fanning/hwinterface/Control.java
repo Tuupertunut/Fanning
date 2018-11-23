@@ -23,19 +23,22 @@
  */
 package com.github.tuupertunut.fanning.hwinterface;
 
+import javafx.beans.value.ObservableDoubleValue;
+
 /**
  *
  * @author Tuupertunut
  */
-public interface Control {
+public interface Control extends HardwareTreeElement {
 
     Sensor getSensor();
 
+    @Override
     default String getName() {
         return getSensor().getName();
     }
 
-    default String getId() {
+    default String getSensorId() {
         return getSensor().getId();
     }
 
@@ -47,8 +50,8 @@ public interface Control {
         return getSensor().getMeasurementUnit();
     }
 
-    default double getValue() {
-        return getSensor().getValue();
+    default ObservableDoubleValue measuredValueProperty() {
+        return getSensor().valueProperty();
     }
 
     boolean isSoftwareControlled();

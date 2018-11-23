@@ -25,9 +25,13 @@ package com.github.tuupertunut.fanning;
 
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
+import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,7 +47,7 @@ import javafx.scene.layout.AnchorPane;
 public class FanningPane extends AnchorPane {
 
     @FXML
-    private TreeTableView<SensorOrHardwareItemWrapper> sensorTreeTable;
+    private TreeTableView<HardwareTreeElement> sensorTreeTable;
 
     public FanningPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanningPane.fxml"));
@@ -59,33 +63,39 @@ public class FanningPane extends AnchorPane {
 
     @FXML
     private void initialize() {
-        TreeTableColumn<SensorOrHardwareItemWrapper, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
+        TreeTableColumn<HardwareTreeElement, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
         sensorNameColumn.setPrefWidth(300);
-        sensorNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<SensorOrHardwareItemWrapper, String> data) -> {
+        sensorNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
-            return new ReadOnlyStringWrapper(data.getValue().getValue().getName());
+            HardwareTreeElement elem = data.getValue().getValue();
+            return new ReadOnlyStringWrapper(elem.getName());
         });
 
-        TreeTableColumn<SensorOrHardwareItemWrapper, String> sensorValueColumn = new TreeTableColumn<>("Value");
-        sensorValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<SensorOrHardwareItemWrapper, String> data) -> {
+        TreeTableColumn<HardwareTreeElement, String> sensorValueColumn = new TreeTableColumn<>("Value");
+        sensorValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
-            return new ReadOnlyStringWrapper(data.getValue().getValue().getValue());
+            HardwareTreeElement elem = data.getValue().getValue();
+            if (elem instanceof Sensor) {
+                return Bindings.convert(((Sensor) elem).valueProperty());
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
         });
 
         sensorTreeTable.getColumns().setAll(sensorNameColumn, sensorValueColumn);
 
 
         HardwareManager hwManager = new MockHardwareManager();
-        TreeItem<SensorOrHardwareItemWrapper> root = createTreeTableModel(hwManager.getHardwareRoot().get());
+        TreeItem<HardwareTreeElement> root = createTreeTableModel(hwManager.getHardwareRoot().get());
 
         sensorTreeTable.setRoot(root);
     }
 
-    private TreeItem<SensorOrHardwareItemWrapper> createTreeTableModel(HardwareItem hw) {
-        TreeItem<SensorOrHardwareItemWrapper> treeItem = new TreeItem<>(new HardwareItemWrapper(hw));
+    private TreeItem<HardwareTreeElement> createTreeTableModel(HardwareItem hw) {
+        TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
 
         for (Sensor sensor : hw.getSensors()) {
-            treeItem.getChildren().add(new TreeItem<>(new SensorWrapper(sensor)));
+            treeItem.getChildren().add(new TreeItem<>(sensor));
         }
         for (HardwareItem subHw : hw.getSubHardware()) {
             treeItem.getChildren().add(createTreeTableModel(subHw));

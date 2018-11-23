@@ -29,15 +29,11 @@ import java.util.List;
  *
  * @author Tuupertunut
  */
-public interface HardwareItem {
+public interface HardwareItem extends HardwareTreeElement {
 
     List<HardwareItem> getSubHardware();
 
     List<Sensor> getSensors();
 
     List<Control> getControls();
-
-    String getName();
-
-    String getId();
 }

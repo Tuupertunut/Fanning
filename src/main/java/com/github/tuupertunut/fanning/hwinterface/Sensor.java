@@ -23,19 +23,17 @@
  */
 package com.github.tuupertunut.fanning.hwinterface;
 
+import javafx.beans.value.ObservableDoubleValue;
+
 /**
  *
  * @author Tuupertunut
  */
-public interface Sensor {
-
-    String getName();
-
-    String getId();
+public interface Sensor extends HardwareTreeElement {
 
     String getSensorType();
 
     String getMeasurementUnit();
 
-    double getValue();
+    ObservableDoubleValue valueProperty();
 }
