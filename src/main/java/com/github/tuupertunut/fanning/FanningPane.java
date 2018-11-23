@@ -89,6 +89,14 @@ public class FanningPane extends AnchorPane {
         TreeItem<HardwareTreeElement> root = createTreeTableModel(hwManager.getHardwareRoot().get());
 
         sensorTreeTable.setRoot(root);
+
+        Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(r);
+            thread.setDaemon(true);
+            return thread;
+        }).scheduleAtFixedRate(() -> {
+            hwManager.updateHardwareTree();
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     private TreeItem<HardwareTreeElement> createTreeTableModel(HardwareItem hw) {
