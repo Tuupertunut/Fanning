@@ -125,6 +125,7 @@ public class FanningPane extends AnchorPane {
 
     private static TreeItem<HardwareTreeElement> createSensorTreeTableModel(HardwareItem hw) {
         TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
+        treeItem.setExpanded(true);
 
         for (Sensor sensor : hw.getSensors()) {
             treeItem.getChildren().add(new TreeItem<>(sensor));
@@ -181,6 +182,7 @@ public class FanningPane extends AnchorPane {
 
     private static TreeItem<HardwareTreeElement> createControlTreeTableModel(HardwareItem hw) {
         TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
+        treeItem.setExpanded(true);
 
         for (Control control : hw.getControls()) {
             treeItem.getChildren().add(new TreeItem<>(control));
