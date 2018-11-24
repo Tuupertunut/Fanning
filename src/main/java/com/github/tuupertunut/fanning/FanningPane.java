@@ -64,25 +64,38 @@ public class FanningPane extends AnchorPane {
     @FXML
     private void initialize() {
         TreeTableColumn<HardwareTreeElement, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
-        sensorNameColumn.setPrefWidth(300);
+        sensorNameColumn.setPrefWidth(200);
         sensorNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
             return new ReadOnlyStringWrapper(elem.getName());
         });
 
-        TreeTableColumn<HardwareTreeElement, String> sensorValueColumn = new TreeTableColumn<>("Value");
-        sensorValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+        TreeTableColumn<HardwareTreeElement, String> sensorTypeColumn = new TreeTableColumn<>("Type");
+        sensorTypeColumn.setPrefWidth(100);
+        sensorTypeColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
             if (elem instanceof Sensor) {
-                return Bindings.convert(((Sensor) elem).valueProperty());
+                return new ReadOnlyStringWrapper(((Sensor) elem).getSensorType());
             } else {
                 return new ReadOnlyStringWrapper("");
             }
         });
 
-        sensorTreeTable.getColumns().setAll(sensorNameColumn, sensorValueColumn);
+        TreeTableColumn<HardwareTreeElement, String> sensorValueColumn = new TreeTableColumn<>("Value");
+        sensorValueColumn.setPrefWidth(100);
+        sensorValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+
+            HardwareTreeElement elem = data.getValue().getValue();
+            if (elem instanceof Sensor) {
+                return Bindings.convert(((Sensor) elem).valueProperty()).concat(" " + ((Sensor) elem).getMeasurementUnit());
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
+        });
+
+        sensorTreeTable.getColumns().setAll(sensorNameColumn, sensorTypeColumn, sensorValueColumn);
 
 
         HardwareManager hwManager = new MockHardwareManager();
