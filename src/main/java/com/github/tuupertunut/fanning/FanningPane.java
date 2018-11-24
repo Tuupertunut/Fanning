@@ -31,7 +31,6 @@ import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,6 +38,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
+import org.fxmisc.easybind.EasyBind;
 
 /**
  *
@@ -89,7 +89,7 @@ public class FanningPane extends AnchorPane {
 
             HardwareTreeElement elem = data.getValue().getValue();
             if (elem instanceof Sensor) {
-                return Bindings.convert(((Sensor) elem).valueProperty()).concat(" " + ((Sensor) elem).getMeasurementUnit());
+                return EasyBind.map(((Sensor) elem).valueProperty(), (Number value) -> value.toString() + " " + ((Sensor) elem).getMeasurementUnit());
             } else {
                 return new ReadOnlyStringWrapper("");
             }
