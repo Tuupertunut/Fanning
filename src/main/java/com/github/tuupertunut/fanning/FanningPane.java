@@ -23,12 +23,16 @@
  */
 package com.github.tuupertunut.fanning;
 
+import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.OptionalDouble;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -48,6 +52,8 @@ public class FanningPane extends AnchorPane {
 
     @FXML
     private TreeTableView<HardwareTreeElement> sensorTreeTable;
+    @FXML
+    private TreeTableView<HardwareTreeElement> controlTreeTable;
 
     public FanningPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanningPane.fxml"));
@@ -63,6 +69,25 @@ public class FanningPane extends AnchorPane {
 
     @FXML
     private void initialize() {
+        HardwareManager hwManager = new MockHardwareManager();
+
+        sensorTreeTable.getColumns().setAll(createSensorTreeTableColumns());
+        sensorTreeTable.setRoot(createSensorTreeTableModel(hwManager.getHardwareRoot().get()));
+
+        controlTreeTable.getColumns().setAll(createControlTreeTableColumns());
+        controlTreeTable.setRoot(createControlTreeTableModel(hwManager.getHardwareRoot().get()));
+
+        Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(r);
+            thread.setDaemon(true);
+            return thread;
+        }).scheduleAtFixedRate(() -> {
+            hwManager.updateHardwareTree();
+        }, 1, 1, TimeUnit.SECONDS);
+    }
+
+    private static List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {
+
         TreeTableColumn<HardwareTreeElement, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
         sensorNameColumn.setPrefWidth(200);
         sensorNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
@@ -95,31 +120,73 @@ public class FanningPane extends AnchorPane {
             }
         });
 
-        sensorTreeTable.getColumns().setAll(sensorNameColumn, sensorTypeColumn, sensorValueColumn);
-
-
-        HardwareManager hwManager = new MockHardwareManager();
-        TreeItem<HardwareTreeElement> root = createTreeTableModel(hwManager.getHardwareRoot().get());
-
-        sensorTreeTable.setRoot(root);
-
-        Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
-            Thread thread = Executors.defaultThreadFactory().newThread(r);
-            thread.setDaemon(true);
-            return thread;
-        }).scheduleAtFixedRate(() -> {
-            hwManager.updateHardwareTree();
-        }, 1, 1, TimeUnit.SECONDS);
+        return Arrays.asList(sensorNameColumn, sensorTypeColumn, sensorValueColumn);
     }
 
-    private TreeItem<HardwareTreeElement> createTreeTableModel(HardwareItem hw) {
+    private static TreeItem<HardwareTreeElement> createSensorTreeTableModel(HardwareItem hw) {
         TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
 
         for (Sensor sensor : hw.getSensors()) {
             treeItem.getChildren().add(new TreeItem<>(sensor));
         }
         for (HardwareItem subHw : hw.getSubHardware()) {
-            treeItem.getChildren().add(createTreeTableModel(subHw));
+            treeItem.getChildren().add(createSensorTreeTableModel(subHw));
+        }
+
+        return treeItem;
+    }
+
+    private static List<TreeTableColumn<HardwareTreeElement, ?>> createControlTreeTableColumns() {
+
+        TreeTableColumn<HardwareTreeElement, String> controlNameColumn = new TreeTableColumn<>("Control");
+        controlNameColumn.setPrefWidth(200);
+        controlNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+
+            HardwareTreeElement elem = data.getValue().getValue();
+            return new ReadOnlyStringWrapper(elem.getName());
+        });
+
+        TreeTableColumn<HardwareTreeElement, String> controlTypeColumn = new TreeTableColumn<>("Type");
+        controlTypeColumn.setPrefWidth(100);
+        controlTypeColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+
+            HardwareTreeElement elem = data.getValue().getValue();
+            if (elem instanceof Control) {
+                return new ReadOnlyStringWrapper(((Control) elem).getSensorType());
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
+        });
+
+        TreeTableColumn<HardwareTreeElement, String> controlValueColumn = new TreeTableColumn<>("Controlled value");
+        controlValueColumn.setPrefWidth(100);
+        controlValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+
+            HardwareTreeElement elem = data.getValue().getValue();
+            if (elem instanceof Control) {
+                return EasyBind.map(((Control) elem).controlledValueProperty(), (OptionalDouble value) -> {
+                    if (value.isPresent()) {
+                        return Double.toString(value.getAsDouble()) + " " + ((Control) elem).getMeasurementUnit();
+                    } else {
+                        return "Not controlled";
+                    }
+                });
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
+        });
+
+        return Arrays.asList(controlNameColumn, controlTypeColumn, controlValueColumn);
+    }
+
+    private static TreeItem<HardwareTreeElement> createControlTreeTableModel(HardwareItem hw) {
+        TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
+
+        for (Control control : hw.getControls()) {
+            treeItem.getChildren().add(new TreeItem<>(control));
+        }
+        for (HardwareItem subHw : hw.getSubHardware()) {
+            treeItem.getChildren().add(createControlTreeTableModel(subHw));
         }
 
         return treeItem;
