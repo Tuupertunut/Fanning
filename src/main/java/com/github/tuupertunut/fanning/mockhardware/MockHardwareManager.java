@@ -23,6 +23,7 @@
  */
 package com.github.tuupertunut.fanning.mockhardware;
 
+import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
@@ -48,11 +49,13 @@ public class MockHardwareManager implements HardwareManager {
         MockSensor sa = new MockSensor("sensor a", "sa", "Temperature", "°C");
         MockSensor sb = new MockSensor("sensor b", "sb", "Temperature", "°C");
         MockSensor sc = new MockSensor("sensor c", "sc", "Voltage", "V");
-        MockHardwareItem ha = new MockHardwareItem(Arrays.asList(), Arrays.asList(sa, sb, sc), Arrays.asList(), "hardware a", "ha");
+        MockControl ca = new MockControl(sc, "ca", 30, 50);
+        MockHardwareItem ha = new MockHardwareItem(Arrays.asList(), Arrays.asList(sa, sb, sc), Arrays.asList(ca), "hardware a", "ha");
 
         MockSensor sd = new MockSensor("sensor d", "sd", "Fan speed", "RPM");
         MockSensor se = new MockSensor("sensor e", "se", "Voltage", "V");
-        MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sd, se), Arrays.asList(), "hardware b", "hb");
+        MockControl cb = new MockControl(sd, "cb", 300, 1000);
+        MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sd, se), Arrays.asList(cb), "hardware b", "hb");
 
         HardwareItem root = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
 
@@ -64,7 +67,12 @@ public class MockHardwareManager implements HardwareManager {
     @Override
     public void updateHardwareTree() {
         for (Sensor sensor : getAllSensors()) {
-            ((MockSensor) sensor).value.set(ThreadLocalRandom.current().nextInt(30, 50));
+            Optional<Control> sensorControl = getAllControls().stream().filter((Control c) -> c.getSensor().equals(sensor)).findFirst();
+            if (sensorControl.isPresent() && sensorControl.get().controlledValueProperty().get().isPresent()) {
+                ((MockSensor) sensor).value.set(sensorControl.get().controlledValueProperty().get().getAsDouble());
+            } else {
+                ((MockSensor) sensor).value.set(ThreadLocalRandom.current().nextInt(30, 50));
+            }
         }
     }
 
