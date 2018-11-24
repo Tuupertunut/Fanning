@@ -23,6 +23,8 @@
  */
 package com.github.tuupertunut.fanning.hwinterface;
 
+import java.util.OptionalDouble;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 
 /**
@@ -54,13 +56,9 @@ public interface Control extends HardwareTreeElement {
         return getSensor().valueProperty();
     }
 
-    boolean isSoftwareControlled();
+    ObjectProperty<OptionalDouble> controlledValueProperty();
 
-    double getMinSoftwareControlValue();
+    double getMinControlledValue();
 
-    double getMaxSoftwareControlValue();
-
-    void setSoftwareControl(double value);
-
-    void setDefaultControl();
+    double getMaxControlledValue();
 }

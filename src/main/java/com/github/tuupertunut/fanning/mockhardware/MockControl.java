@@ -25,6 +25,9 @@ package com.github.tuupertunut.fanning.mockhardware;
 
 import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
+import java.util.OptionalDouble;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
@@ -32,38 +35,43 @@ import com.github.tuupertunut.fanning.hwinterface.Sensor;
  */
 public class MockControl implements Control {
 
+    Sensor sensor;
+    String id;
+    double minControlledValue;
+    double maxControlledValue;
+    ObjectProperty<OptionalDouble> controlledValue;
+
+    public MockControl(Sensor sensor, String id, double minControlledValue, double maxControlledValue) {
+        this.sensor = sensor;
+        this.id = id;
+        this.minControlledValue = minControlledValue;
+        this.maxControlledValue = maxControlledValue;
+
+        controlledValue = new SimpleObjectProperty<>(OptionalDouble.empty());
+    }
+
     @Override
     public Sensor getSensor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return sensor;
     }
 
     @Override
     public String getId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return id;
     }
 
     @Override
-    public boolean isSoftwareControlled() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getMinControlledValue() {
+        return minControlledValue;
     }
 
     @Override
-    public double getMinSoftwareControlValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getMaxControlledValue() {
+        return maxControlledValue;
     }
 
     @Override
-    public double getMaxSoftwareControlValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setSoftwareControl(double value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setDefaultControl() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ObjectProperty<OptionalDouble> controlledValueProperty() {
+        return controlledValue;
     }
 }
