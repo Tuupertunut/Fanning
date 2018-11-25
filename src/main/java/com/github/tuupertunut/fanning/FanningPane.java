@@ -72,10 +72,10 @@ public class FanningPane extends AnchorPane {
         HardwareManager hwManager = new MockHardwareManager();
 
         sensorTreeTable.getColumns().setAll(createSensorTreeTableColumns());
-        sensorTreeTable.setRoot(createSensorTreeTableModel(hwManager.getHardwareRoot().get()));
+        sensorTreeTable.setRoot(createSensorTreeTableModel(hwManager.getHardwareRoot()));
 
         controlTreeTable.getColumns().setAll(createControlTreeTableColumns());
-        controlTreeTable.setRoot(createControlTreeTableModel(hwManager.getHardwareRoot().get()));
+        controlTreeTable.setRoot(createControlTreeTableModel(hwManager.getHardwareRoot()));
 
         Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);

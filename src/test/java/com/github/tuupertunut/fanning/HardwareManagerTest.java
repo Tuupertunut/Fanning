@@ -30,7 +30,6 @@ import com.github.tuupertunut.fanning.mockhardware.MockHardwareItem;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
 import com.github.tuupertunut.fanning.mockhardware.MockSensor;
 import java.util.Arrays;
-import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +55,7 @@ public class HardwareManagerTest {
 
         HardwareItem root = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
 
-        hwManager = new MockHardwareManager(Optional.of(root));
+        hwManager = new MockHardwareManager(root);
     }
 
     @Test
