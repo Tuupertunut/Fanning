@@ -36,17 +36,20 @@ import javafx.collections.ObservableMap;
  */
 public class FanCurve {
 
+    /* In order to use NavigableMap specific methods, the internal
+     * implementation must be available. */
+    private final NavigableMap<Double, Double> internalChangePointsMap;
+
     private final Sensor source;
     private final Control target;
-    private final NavigableMap<Double, Double> internalActionPointsMap;
-    private final ObservableMap<Double, Double> actionPoints;
+    private final ObservableMap<Double, Double> changePoints;
 
     public FanCurve(Sensor source, Control target) {
         this.source = source;
         this.target = target;
 
-        internalActionPointsMap = new TreeMap<>();
-        actionPoints = FXCollections.observableMap(internalActionPointsMap);
+        internalChangePointsMap = new TreeMap<>();
+        changePoints = FXCollections.observableMap(internalChangePointsMap);
     }
 
     public Sensor getSource() {
@@ -57,7 +60,15 @@ public class FanCurve {
         return target;
     }
 
-    public ObservableMap<Double, Double> actionPointsProperty() {
-        return actionPoints;
+    public ObservableMap<Double, Double> changePointsProperty() {
+        return changePoints;
+    }
+
+    public double getTargetValueAt(double sensorValue) {
+        Double key = internalChangePointsMap.floorKey(sensorValue);
+        if (key == null) {
+            key = internalChangePointsMap.firstKey();
+        }
+        return changePoints.get(key);
     }
 }
