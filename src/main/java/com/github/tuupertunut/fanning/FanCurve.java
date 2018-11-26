@@ -25,9 +25,10 @@ package com.github.tuupertunut.fanning;
 
 import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.SimpleMapProperty;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 
 /**
  *
@@ -37,13 +38,15 @@ public class FanCurve {
 
     private final Sensor source;
     private final Control target;
-    private final MapProperty<Double, Double> actionPoints;
+    private final NavigableMap<Double, Double> internalActionPointsMap;
+    private final ObservableMap<Double, Double> actionPoints;
 
     public FanCurve(Sensor source, Control target) {
         this.source = source;
         this.target = target;
 
-        actionPoints = new SimpleMapProperty<>(FXCollections.observableHashMap());
+        internalActionPointsMap = new TreeMap<>();
+        actionPoints = FXCollections.observableMap(internalActionPointsMap);
     }
 
     public Sensor getSource() {
@@ -54,7 +57,7 @@ public class FanCurve {
         return target;
     }
 
-    public MapProperty<Double, Double> actionPointsProperty() {
+    public ObservableMap<Double, Double> actionPointsProperty() {
         return actionPoints;
     }
 }
