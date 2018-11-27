@@ -21,47 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning.gui;
+package com.github.tuupertunut.fanning.core;
 
-import com.github.tuupertunut.fanning.core.FanCurve;
-import com.github.tuupertunut.fanning.core.FanningService;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
-import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
-import java.util.Arrays;
 import java.util.List;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 
 /**
  *
  * @author Tuupertunut
  */
-public class Fanning extends Application {
+public class FanningService {
 
-    private FanningService fanningService;
+    private final HardwareManager hardwareManager;
+    private final ListProperty<FanCurve> fanCurves;
 
-    @Override
-    public void init() throws Exception {
-        HardwareManager hwManager = new MockHardwareManager();
-        List<FanCurve> fanCurves = Arrays.asList();
-        fanningService = new FanningService(hwManager, fanCurves);
+    public FanningService(HardwareManager hardwareManager, List<FanCurve> fanCurves) {
+        this.hardwareManager = hardwareManager;
+        this.fanCurves = new SimpleListProperty<>(FXCollections.observableArrayList(fanCurves));
+
+        initUpdater();
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        FanningPane root = new FanningPane(fanningService);
-
-        Scene scene = new Scene(root);
-
-        stage.setScene(scene);
-        stage.show();
+    private void initUpdater() {
+        Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(r);
+            thread.setDaemon(true);
+            return thread;
+        }).scheduleAtFixedRate(this::update, 1, 1, TimeUnit.SECONDS);
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
+    private void update() {
+        hardwareManager.updateHardwareTree();
+    }
+
+    public HardwareManager getHardwareManager() {
+        return hardwareManager;
+    }
+
+    public ListProperty<FanCurve> fanCurvesProperty() {
+        return fanCurves;
     }
 }

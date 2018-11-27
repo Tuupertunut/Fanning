@@ -23,18 +23,15 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
+import com.github.tuupertunut.fanning.core.FanningService;
 import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
-import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
-import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,12 +47,16 @@ import org.fxmisc.easybind.EasyBind;
  */
 public class FanningPane extends AnchorPane {
 
+    private final FanningService fanningService;
+
     @FXML
     private TreeTableView<HardwareTreeElement> sensorTreeTable;
     @FXML
     private TreeTableView<HardwareTreeElement> controlTreeTable;
 
-    public FanningPane() {
+    public FanningPane(FanningService fanningService) {
+        this.fanningService = fanningService;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanningPane.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -69,21 +70,11 @@ public class FanningPane extends AnchorPane {
 
     @FXML
     private void initialize() {
-        HardwareManager hwManager = new MockHardwareManager();
-
         sensorTreeTable.getColumns().setAll(createSensorTreeTableColumns());
-        sensorTreeTable.setRoot(createSensorTreeTableModel(hwManager.getHardwareRoot()));
+        sensorTreeTable.setRoot(createSensorTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
 
         controlTreeTable.getColumns().setAll(createControlTreeTableColumns());
-        controlTreeTable.setRoot(createControlTreeTableModel(hwManager.getHardwareRoot()));
-
-        Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
-            Thread thread = Executors.defaultThreadFactory().newThread(r);
-            thread.setDaemon(true);
-            return thread;
-        }).scheduleAtFixedRate(() -> {
-            hwManager.updateHardwareTree();
-        }, 1, 1, TimeUnit.SECONDS);
+        controlTreeTable.setRoot(createControlTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
     }
 
     private static List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {
