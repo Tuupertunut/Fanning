@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
+package com.github.tuupertunut.fanning.gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

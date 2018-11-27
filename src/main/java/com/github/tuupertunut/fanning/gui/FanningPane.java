@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
+package com.github.tuupertunut.fanning.gui;
 
 import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
