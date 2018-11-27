@@ -89,7 +89,7 @@ public class FanningPane extends AnchorPane {
     private static List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {
 
         TreeTableColumn<HardwareTreeElement, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
-        sensorNameColumn.setPrefWidth(200);
+        sensorNameColumn.setPrefWidth(150);
         sensorNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
@@ -140,7 +140,7 @@ public class FanningPane extends AnchorPane {
     private static List<TreeTableColumn<HardwareTreeElement, ?>> createControlTreeTableColumns() {
 
         TreeTableColumn<HardwareTreeElement, String> controlNameColumn = new TreeTableColumn<>("Control");
-        controlNameColumn.setPrefWidth(200);
+        controlNameColumn.setPrefWidth(150);
         controlNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
