@@ -5,6 +5,7 @@
 ## Documentation
 
 [Requirements specification](https://github.com/Tuupertunut/Fanning/blob/master/documentation/reqspec.md)
+
 [Architecture](https://github.com/Tuupertunut/Fanning/blob/master/documentation/architecture.md)
 
 ## Usage
