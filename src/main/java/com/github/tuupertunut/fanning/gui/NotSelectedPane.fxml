@@ -24,23 +24,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
 
-<fx:root id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <SplitPane dividerPositions="0.3" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <items>
-            <SplitPane dividerPositions="0.35" orientation="VERTICAL">
-               <items>
-                  <TreeTableView fx:id="controlTreeTable" />
-                  <TreeTableView fx:id="sensorTreeTable" />
-               </items>
-            </SplitPane>
-            <StackPane />
-         </items>
-      </SplitPane>
-   </children>
+<fx:root id="AnchorPane" prefHeight="200.0" prefWidth="200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label text="Select a control" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
+            </children>
+        </AnchorPane>
+    </children>
 </fx:root>
