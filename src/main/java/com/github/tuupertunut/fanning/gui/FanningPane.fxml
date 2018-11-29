@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 <fx:root id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SplitPane dividerPositions="0.3" layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+      <SplitPane dividerPositions="0.3" layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <items>
             <SplitPane dividerPositions="0.35" orientation="VERTICAL">
                <items>
@@ -46,7 +46,16 @@ THE SOFTWARE.
             </SplitPane>
             <StackPane>
                <children>
-                  <BorderPane>
+                  <AnchorPane visible="false">
+                     <children>
+                        <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label layoutX="7.0" layoutY="7.0" text="Control x not controlled. Select a sensor to create a fan curve." AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+                  <BorderPane visible="false">
                      <center>
                         <SplitPane dividerPositions="0.7">
                            <items>
@@ -79,27 +88,29 @@ THE SOFTWARE.
                         </AnchorPane>
                      </top>
                   </BorderPane>
-                  <BorderPane visible="false">
-                     <top>
-                        <AnchorPane BorderPane.alignment="CENTER">
+                  <AnchorPane visible="false">
+                     <children>
+                        <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <BorderPane AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
-                                 <right>
-                                    <Button mnemonicParsing="false" text="Save" BorderPane.alignment="CENTER" />
-                                 </right>
-                                 <center>
-                                    <HBox alignment="CENTER_LEFT" spacing="14.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <Button mnemonicParsing="false" text="Delete fan curve" />
-                                          <Label text="Text here: control x controlled by sensor y" />
-                                       </children>
-                                    </HBox>
-                                 </center>
-                              </BorderPane>
+                              <HBox alignment="CENTER_LEFT" layoutX="7.0" layoutY="7.0" spacing="14.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" text="Create fan curve" />
+                                    <Label text="Text here: control x to be controlled by sensor y" />
+                                 </children>
+                              </HBox>
                            </children>
                         </AnchorPane>
-                     </top>
-                  </BorderPane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label layoutX="7.0" layoutY="7.0" text="Select a control" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
                </children>
             </StackPane>
          </items>
