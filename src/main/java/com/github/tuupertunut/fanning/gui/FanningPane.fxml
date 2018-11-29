@@ -39,7 +39,7 @@ THE SOFTWARE.
                   <TreeTableView fx:id="sensorTreeTable" />
                </items>
             </SplitPane>
-            <StackPane />
+            <StackPane fx:id="fanCurvePaneContainer" />
          </items>
       </SplitPane>
    </children>

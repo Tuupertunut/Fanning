@@ -39,6 +39,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import org.fxmisc.easybind.EasyBind;
 
 /**
@@ -53,6 +54,8 @@ public class FanningPane extends AnchorPane {
     private TreeTableView<HardwareTreeElement> sensorTreeTable;
     @FXML
     private TreeTableView<HardwareTreeElement> controlTreeTable;
+    @FXML
+    private StackPane fanCurvePaneContainer;
 
     public FanningPane(FanningService fanningService) {
         this.fanningService = fanningService;
@@ -75,6 +78,13 @@ public class FanningPane extends AnchorPane {
 
         controlTreeTable.getColumns().setAll(createControlTreeTableColumns());
         controlTreeTable.setRoot(createControlTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
+
+        NotSelectedPane notSelectedPane = new NotSelectedPane();
+        NotControlledPane notControlledPane = new NotControlledPane(fanningService);
+        CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService);
+        FanCurvePane fanCurvePane = new FanCurvePane(fanningService);
+
+        fanCurvePaneContainer.getChildren().add(notSelectedPane);
     }
 
     private static List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {

@@ -23,6 +23,7 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
+import com.github.tuupertunut.fanning.core.FanningService;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +35,11 @@ import javafx.scene.layout.AnchorPane;
  */
 public class FanCurvePane extends AnchorPane {
 
-    public FanCurvePane() {
+    private final FanningService fanningService;
+
+    public FanCurvePane(FanningService fanningService) {
+        this.fanningService = fanningService;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanCurvePane.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
