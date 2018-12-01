@@ -23,7 +23,7 @@
  */
 package com.github.tuupertunut.fanning.mockhardware;
 
-import com.github.tuupertunut.fanning.hwinterface.Control;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.util.List;
@@ -36,14 +36,14 @@ public class MockHardwareItem implements HardwareItem {
 
     List<HardwareItem> subHardware;
     List<Sensor> sensors;
-    List<Control> controls;
+    List<FanController> fans;
     String name;
     String id;
 
-    public MockHardwareItem(List<HardwareItem> subHardware, List<Sensor> sensors, List<Control> controls, String name, String id) {
+    public MockHardwareItem(List<HardwareItem> subHardware, List<Sensor> sensors, List<FanController> fans, String name, String id) {
         this.subHardware = subHardware;
         this.sensors = sensors;
-        this.controls = controls;
+        this.fans = fans;
         this.name = name;
         this.id = id;
     }
@@ -59,8 +59,8 @@ public class MockHardwareItem implements HardwareItem {
     }
 
     @Override
-    public List<Control> getControls() {
-        return controls;
+    public List<FanController> getFanControllers() {
+        return fans;
     }
 
     @Override

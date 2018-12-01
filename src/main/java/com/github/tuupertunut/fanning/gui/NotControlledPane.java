@@ -39,13 +39,13 @@ import org.fxmisc.easybind.EasyBind;
  */
 public class NotControlledPane extends AnchorPane {
 
-    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty;
 
     @FXML
     private Label infoLabel;
 
-    public NotControlledPane(ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty) {
-        this.selectedControlProperty = selectedControlProperty;
+    public NotControlledPane(ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty) {
+        this.selectedFanProperty = selectedFanProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NotControlledPane.fxml"));
         fxmlLoader.setRoot(this);
@@ -60,12 +60,12 @@ public class NotControlledPane extends AnchorPane {
 
     @FXML
     private void initialize() {
-        infoLabel.textProperty().bind(EasyBind.map(selectedControlProperty, (TreeItem<HardwareTreeElement> selControl) -> {
-            if (selControl == null) {
+        infoLabel.textProperty().bind(EasyBind.map(selectedFanProperty, (TreeItem<HardwareTreeElement> selFan) -> {
+            if (selFan == null) {
                 /* This is never visible */
                 return "";
             } else {
-                return "Control " + selControl.getValue().getName() + " not controlled. Select a sensor to create a fan curve.";
+                return "Fan " + selFan.getValue().getName() + " not controlled. Select a sensor to create a fan curve.";
             }
         }));
     }

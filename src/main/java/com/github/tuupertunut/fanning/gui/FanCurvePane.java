@@ -39,12 +39,12 @@ import javafx.scene.layout.AnchorPane;
 public class FanCurvePane extends AnchorPane {
 
     private final FanningService fanningService;
-    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty;
     private final ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty;
 
-    public FanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
+    public FanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
         this.fanningService = fanningService;
-        this.selectedControlProperty = selectedControlProperty;
+        this.selectedFanProperty = selectedFanProperty;
         this.selectedSensorProperty = selectedSensorProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanCurvePane.fxml"));

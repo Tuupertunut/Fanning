@@ -24,7 +24,7 @@
 package com.github.tuupertunut.fanning.gui;
 
 import com.github.tuupertunut.fanning.core.FanningService;
-import com.github.tuupertunut.fanning.hwinterface.Control;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
@@ -58,7 +58,7 @@ public class FanningPane extends AnchorPane {
     @FXML
     private TreeTableView<HardwareTreeElement> sensorTreeTable;
     @FXML
-    private TreeTableView<HardwareTreeElement> controlTreeTable;
+    private TreeTableView<HardwareTreeElement> fanTreeTable;
     @FXML
     private StackPane fanCurvePaneContainer;
 
@@ -85,21 +85,21 @@ public class FanningPane extends AnchorPane {
         sensorTreeTable.getColumns().setAll(createSensorTreeTableColumns());
         sensorTreeTable.setRoot(createSensorTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
 
-        controlTreeTable.getColumns().setAll(createControlTreeTableColumns());
-        controlTreeTable.setRoot(createControlTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
+        fanTreeTable.getColumns().setAll(createFanTreeTableColumns());
+        fanTreeTable.setRoot(createFanTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
 
-        ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty = controlTreeTable.getSelectionModel().selectedItemProperty();
+        ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty = fanTreeTable.getSelectionModel().selectedItemProperty();
         ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty = sensorTreeTable.getSelectionModel().selectedItemProperty();
 
         NotSelectedPane notSelectedPane = new NotSelectedPane();
-        NotControlledPane notControlledPane = new NotControlledPane(selectedControlProperty);
-        CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService, selectedControlProperty, selectedSensorProperty);
-        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedControlProperty, selectedSensorProperty);
+        NotControlledPane notControlledPane = new NotControlledPane(selectedFanProperty);
+        CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
+        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
 
-        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedControlProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selControl, TreeItem<HardwareTreeElement> selSensor) -> {
-            if (selControl == null || !(selControl.getValue() instanceof Control)) {
+        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedFanProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor) -> {
+            if (selFan == null || !(selFan.getValue() instanceof FanController)) {
                 return FXCollections.singletonObservableList(notSelectedPane);
-            } else if (false) {// check here if control has fan curve
+            } else if (false) {// check here if fan has fan curve
                 return FXCollections.singletonObservableList(fanCurvePane);
             } else if (selSensor == null || !(selSensor.getValue() instanceof Sensor)) {
                 return FXCollections.singletonObservableList(notControlledPane);
@@ -161,37 +161,37 @@ public class FanningPane extends AnchorPane {
         return treeItem;
     }
 
-    private static List<TreeTableColumn<HardwareTreeElement, ?>> createControlTreeTableColumns() {
+    private static List<TreeTableColumn<HardwareTreeElement, ?>> createFanTreeTableColumns() {
 
-        TreeTableColumn<HardwareTreeElement, String> controlNameColumn = new TreeTableColumn<>("Control");
-        controlNameColumn.setPrefWidth(150);
-        controlNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+        TreeTableColumn<HardwareTreeElement, String> fanNameColumn = new TreeTableColumn<>("Fan");
+        fanNameColumn.setPrefWidth(150);
+        fanNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
             return new ReadOnlyStringWrapper(elem.getName());
         });
 
-        TreeTableColumn<HardwareTreeElement, String> controlTypeColumn = new TreeTableColumn<>("Type");
-        controlTypeColumn.setPrefWidth(100);
-        controlTypeColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+        TreeTableColumn<HardwareTreeElement, String> fanTypeColumn = new TreeTableColumn<>("Type");
+        fanTypeColumn.setPrefWidth(100);
+        fanTypeColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
-            if (elem instanceof Control) {
-                return new ReadOnlyStringWrapper(((Control) elem).getSensorType());
+            if (elem instanceof FanController) {
+                return new ReadOnlyStringWrapper(((FanController) elem).getSensorType());
             } else {
                 return new ReadOnlyStringWrapper("");
             }
         });
 
-        TreeTableColumn<HardwareTreeElement, String> controlValueColumn = new TreeTableColumn<>("Controlled value");
-        controlValueColumn.setPrefWidth(100);
-        controlValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+        TreeTableColumn<HardwareTreeElement, String> fanValueColumn = new TreeTableColumn<>("Controlled value");
+        fanValueColumn.setPrefWidth(100);
+        fanValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
-            if (elem instanceof Control) {
-                return EasyBind.map(((Control) elem).controlledValueProperty(), (OptionalDouble value) -> {
+            if (elem instanceof FanController) {
+                return EasyBind.map(((FanController) elem).controlledValueProperty(), (OptionalDouble value) -> {
                     if (value.isPresent()) {
-                        return Double.toString(value.getAsDouble()) + " " + ((Control) elem).getMeasurementUnit();
+                        return Double.toString(value.getAsDouble()) + " " + ((FanController) elem).getMeasurementUnit();
                     } else {
                         return "Not controlled";
                     }
@@ -201,18 +201,18 @@ public class FanningPane extends AnchorPane {
             }
         });
 
-        return Arrays.asList(controlNameColumn, controlTypeColumn, controlValueColumn);
+        return Arrays.asList(fanNameColumn, fanTypeColumn, fanValueColumn);
     }
 
-    private static TreeItem<HardwareTreeElement> createControlTreeTableModel(HardwareItem hw) {
+    private static TreeItem<HardwareTreeElement> createFanTreeTableModel(HardwareItem hw) {
         TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
         treeItem.setExpanded(true);
 
-        for (Control control : hw.getControls()) {
-            treeItem.getChildren().add(new TreeItem<>(control));
+        for (FanController fan : hw.getFanControllers()) {
+            treeItem.getChildren().add(new TreeItem<>(fan));
         }
         for (HardwareItem subHw : hw.getSubHardware()) {
-            treeItem.getChildren().add(createControlTreeTableModel(subHw));
+            treeItem.getChildren().add(createFanTreeTableModel(subHw));
         }
 
         return treeItem;

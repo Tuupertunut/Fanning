@@ -41,15 +41,15 @@ import org.fxmisc.easybind.EasyBind;
 public class CreateFanCurvePane extends AnchorPane {
 
     private final FanningService fanningService;
-    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty;
     private final ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty;
 
     @FXML
     private Label infoLabel;
 
-    public CreateFanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
+    public CreateFanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
         this.fanningService = fanningService;
-        this.selectedControlProperty = selectedControlProperty;
+        this.selectedFanProperty = selectedFanProperty;
         this.selectedSensorProperty = selectedSensorProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CreateFanCurvePane.fxml"));
@@ -65,12 +65,12 @@ public class CreateFanCurvePane extends AnchorPane {
 
     @FXML
     private void initialize() {
-        infoLabel.textProperty().bind(EasyBind.combine(selectedControlProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selControl, TreeItem<HardwareTreeElement> selSensor) -> {
-            if (selControl == null || selSensor == null) {
+        infoLabel.textProperty().bind(EasyBind.combine(selectedFanProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor) -> {
+            if (selFan == null || selSensor == null) {
                 /* This is never visible */
                 return "";
             } else {
-                return "Control " + selControl.getValue().getName() + " to be controlled by sensor " + selSensor.getValue().getName();
+                return "Fan " + selFan.getValue().getName() + " to be controlled by sensor " + selSensor.getValue().getName();
             }
         }));
     }

@@ -61,8 +61,8 @@ public interface HardwareManager {
         return sensors;
     }
 
-    default List<Control> getAllControls() {
-        List<Control> controls = new ArrayList<>();
+    default List<FanController> getAllFanControllers() {
+        List<FanController> fans = new ArrayList<>();
 
         /* Depth first search for tree using a stack. */
         Deque<HardwareItem> depthFirstStack = new ArrayDeque<>();
@@ -72,7 +72,7 @@ public interface HardwareManager {
 
             /* Pop a node from the stack and process it. */
             HardwareItem hw = depthFirstStack.pop();
-            controls.addAll(hw.getControls());
+            fans.addAll(hw.getFanControllers());
 
             /* Add children of the node to the stack. */
             for (int i = hw.getSubHardware().size() - 1; i >= 0; i--) {
@@ -81,7 +81,7 @@ public interface HardwareManager {
             }
         }
 
-        return controls;
+        return fans;
     }
 
     default List<HardwareItem> getAllHardware() {

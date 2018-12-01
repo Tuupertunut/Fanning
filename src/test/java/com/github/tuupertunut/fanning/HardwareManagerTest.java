@@ -23,7 +23,6 @@
  */
 package com.github.tuupertunut.fanning;
 
-import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareItem;
@@ -33,6 +32,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 
 /**
  *
@@ -69,7 +69,7 @@ public class HardwareManagerTest {
     }
 
     @Test
-    public void testGetAllControls() {
-        Assert.assertArrayEquals(new String[]{}, hwManager.getAllControls().stream().map(Control::getId).toArray());
+    public void testGetAllFanControllers() {
+        Assert.assertArrayEquals(new String[]{}, hwManager.getAllFanControllers().stream().map(FanController::getId).toArray());
     }
 }

@@ -35,5 +35,5 @@ public interface HardwareItem extends HardwareTreeElement {
 
     List<Sensor> getSensors();
 
-    List<Control> getControls();
+    List<FanController> getFanControllers();
 }

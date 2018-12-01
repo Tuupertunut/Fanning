@@ -23,12 +23,12 @@
  */
 package com.github.tuupertunut.fanning.core;
 
-import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 
 /**
  *
@@ -41,10 +41,10 @@ public class FanCurve {
     private final NavigableMap<Double, Double> internalChangePointsMap;
 
     private final Sensor source;
-    private final Control target;
+    private final FanController target;
     private final ObservableMap<Double, Double> changePoints;
 
-    public FanCurve(Sensor source, Control target) {
+    public FanCurve(Sensor source, FanController target) {
         this.source = source;
         this.target = target;
 
@@ -56,7 +56,7 @@ public class FanCurve {
         return source;
     }
 
-    public Control getTarget() {
+    public FanController getTarget() {
         return target;
     }
 

@@ -31,7 +31,7 @@ import javafx.beans.value.ObservableDoubleValue;
  *
  * @author Tuupertunut
  */
-public interface Control extends HardwareTreeElement {
+public interface FanController extends HardwareTreeElement {
 
     Sensor getSensor();
 

@@ -23,17 +23,17 @@
  */
 package com.github.tuupertunut.fanning.mockhardware;
 
-import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.util.OptionalDouble;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 
 /**
  *
  * @author Tuupertunut
  */
-public class MockControl implements Control {
+public class MockFanController implements FanController {
 
     Sensor sensor;
     String id;
@@ -41,7 +41,7 @@ public class MockControl implements Control {
     double maxControlledValue;
     ObjectProperty<OptionalDouble> controlledValue;
 
-    public MockControl(Sensor sensor, String id, double minControlledValue, double maxControlledValue) {
+    public MockFanController(Sensor sensor, String id, double minControlledValue, double maxControlledValue) {
         this.sensor = sensor;
         this.id = id;
         this.minControlledValue = minControlledValue;
