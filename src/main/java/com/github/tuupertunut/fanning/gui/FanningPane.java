@@ -23,6 +23,7 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
+import com.github.tuupertunut.fanning.core.FanCurve;
 import com.github.tuupertunut.fanning.core.FanningService;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
@@ -38,6 +39,7 @@ import javafx.beans.binding.ListBinding;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TreeItem;
@@ -96,10 +98,10 @@ public class FanningPane extends AnchorPane {
         CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
         FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
 
-        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedFanProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor) -> {
+        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedFanProperty, selectedSensorProperty, fanningService.fanCurvesProperty(), (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor, ObservableList<FanCurve> fanCurves) -> {
             if (selFan == null || !(selFan.getValue() instanceof FanController)) {
                 return FXCollections.singletonObservableList(notSelectedPane);
-            } else if (false) {// check here if fan has fan curve
+            } else if (fanningService.isFanControlled((FanController) selFan.getValue())) {
                 return FXCollections.singletonObservableList(fanCurvePane);
             } else if (selSensor == null || !(selSensor.getValue() instanceof Sensor)) {
                 return FXCollections.singletonObservableList(notControlledPane);

@@ -35,7 +35,7 @@ THE SOFTWARE.
          <children>
             <HBox alignment="CENTER_LEFT" spacing="14.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
                <children>
-                  <Button mnemonicParsing="false" text="Create fan curve" />
+                  <Button fx:id="createButton" mnemonicParsing="false" text="Create fan curve" />
                   <Label fx:id="infoLabel" text="infoLabel" />
                </children>
             </HBox>

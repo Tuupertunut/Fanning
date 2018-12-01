@@ -23,12 +23,17 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
+import com.github.tuupertunut.fanning.core.FanCurve;
 import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
+import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.io.IOException;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
@@ -46,6 +51,8 @@ public class CreateFanCurvePane extends AnchorPane {
 
     @FXML
     private Label infoLabel;
+    @FXML
+    private Button createButton;
 
     public CreateFanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
         this.fanningService = fanningService;
@@ -73,5 +80,9 @@ public class CreateFanCurvePane extends AnchorPane {
                 return "Fan " + selFan.getValue().getName() + " to be controlled by sensor " + selSensor.getValue().getName();
             }
         }));
+
+        createButton.setOnAction((ActionEvent event) -> {
+            fanningService.fanCurvesProperty().add(new FanCurve((Sensor) selectedSensorProperty.getValue().getValue(), (FanController) selectedFanProperty.getValue().getValue()));
+        });
     }
 }
