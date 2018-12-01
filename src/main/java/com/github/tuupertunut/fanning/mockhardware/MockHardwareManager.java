@@ -46,16 +46,19 @@ public class MockHardwareManager implements HardwareManager {
     }
 
     public MockHardwareManager() {
-        MockSensor sa = new MockSensor("sensor a", "sa", "Temperature", "°C");
-        MockSensor sb = new MockSensor("sensor b", "sb", "Temperature", "°C");
-        MockSensor sc = new MockSensor("sensor c", "sc", "Voltage", "V");
-        MockFanController fa = new MockFanController(sc, "fa", 30, 50);
-        MockHardwareItem ha = new MockHardwareItem(Arrays.asList(), Arrays.asList(sa, sb, sc), Arrays.asList(fa), "hardware a", "ha");
+        MockSensor sa = new MockSensor("fake cpu core1 temp", "sct1", "Temperature", "°C");
+        MockSensor sb = new MockSensor("fake cpu core2 temp ", "sct2", "Temperature", "°C");
+        MockSensor sc = new MockSensor("fake cpu voltage", "scv", "Voltage", "V");
+        MockSensor sd = new MockSensor("fake cpu fan speed", "scf", "Fan speed", "RPM");
+        MockSensor se = new MockSensor("fake cpu fan percent", "scp", "Control", "%");
+        MockFanController fa = new MockFanController(se, "fc", 30, 50);
+        MockHardwareItem ha = new MockHardwareItem(Arrays.asList(), Arrays.asList(sa, sb, sc, sd, se), Arrays.asList(fa), "fake cpu", "hc");
 
-        MockSensor sd = new MockSensor("sensor d", "sd", "Fan speed", "RPM");
-        MockSensor se = new MockSensor("sensor e", "se", "Voltage", "V");
-        MockFanController fb = new MockFanController(sd, "fb", 300, 1000);
-        MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sd, se), Arrays.asList(fb), "hardware b", "hb");
+        MockSensor sf = new MockSensor("fake gpu temp", "sgt", "Temperature", "°C");
+        MockSensor sg = new MockSensor("fake gpu fan speed", "sgf", "Fan speed", "RPM");
+        MockSensor sh = new MockSensor("fake gpu fan percent", "sgp", "Control", "%");
+        MockFanController fb = new MockFanController(sh, "fg", 0, 100);
+        MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sf, sg, sh), Arrays.asList(fb), "fake gpu", "hg");
 
         hwRoot = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
 
