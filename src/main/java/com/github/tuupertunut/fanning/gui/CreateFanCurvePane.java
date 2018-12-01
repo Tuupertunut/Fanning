@@ -24,10 +24,15 @@
 package com.github.tuupertunut.fanning.gui;
 
 import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import java.io.IOException;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
+import org.fxmisc.easybind.EasyBind;
 
 /**
  *
@@ -36,9 +41,16 @@ import javafx.scene.layout.AnchorPane;
 public class CreateFanCurvePane extends AnchorPane {
 
     private final FanningService fanningService;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty;
 
-    public CreateFanCurvePane(FanningService fanningService) {
+    @FXML
+    private Label infoLabel;
+
+    public CreateFanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
         this.fanningService = fanningService;
+        this.selectedControlProperty = selectedControlProperty;
+        this.selectedSensorProperty = selectedSensorProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CreateFanCurvePane.fxml"));
         fxmlLoader.setRoot(this);
@@ -53,5 +65,13 @@ public class CreateFanCurvePane extends AnchorPane {
 
     @FXML
     private void initialize() {
+        infoLabel.textProperty().bind(EasyBind.combine(selectedControlProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selControl, TreeItem<HardwareTreeElement> selSensor) -> {
+            if (selControl == null || selSensor == null) {
+                /* This is never visible */
+                return "";
+            } else {
+                return "Control " + selControl.getValue().getName() + " to be controlled by sensor " + selSensor.getValue().getName();
+            }
+        }));
     }
 }

@@ -29,15 +29,14 @@ THE SOFTWARE.
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<fx:root id="AnchorPane" prefHeight="200.0" prefWidth="200.0" type="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+<fx:root id="AnchorPane" prefHeight="200.0" prefWidth="200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER_LEFT" spacing="14.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
                <children>
                   <Button mnemonicParsing="false" text="Create fan curve" />
-                  <Label text="Text here: control x to be controlled by sensor y" />
+                  <Label fx:id="infoLabel" text="infoLabel" />
                </children>
             </HBox>
          </children>

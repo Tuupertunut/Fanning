@@ -27,12 +27,11 @@ THE SOFTWARE.
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<fx:root id="AnchorPane" prefHeight="200.0" prefWidth="200.0" type="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+<fx:root id="AnchorPane" prefHeight="200.0" prefWidth="200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Control x not controlled. Select a sensor to create a fan curve." AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
+            <Label fx:id="infoLabel" text="infoLabel" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
          </children>
       </AnchorPane>
    </children>

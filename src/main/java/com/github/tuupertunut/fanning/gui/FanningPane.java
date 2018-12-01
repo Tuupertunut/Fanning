@@ -28,11 +28,16 @@ import com.github.tuupertunut.fanning.hwinterface.Control;
 import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
 import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
+import com.github.tuupertunut.fanning.util.ObservableListBinding;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ListBinding;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TreeItem;
@@ -57,6 +62,10 @@ public class FanningPane extends AnchorPane {
     @FXML
     private StackPane fanCurvePaneContainer;
 
+    /* A reference to the binding must be retained because JavaFX uses weak
+     * listeners. This would otherwise be garbage collected. */
+    private ListBinding<AnchorPane> containerChildrenBinding;
+
     public FanningPane(FanningService fanningService) {
         this.fanningService = fanningService;
 
@@ -79,12 +88,26 @@ public class FanningPane extends AnchorPane {
         controlTreeTable.getColumns().setAll(createControlTreeTableColumns());
         controlTreeTable.setRoot(createControlTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
 
-        NotSelectedPane notSelectedPane = new NotSelectedPane();
-        NotControlledPane notControlledPane = new NotControlledPane(fanningService);
-        CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService);
-        FanCurvePane fanCurvePane = new FanCurvePane(fanningService);
+        ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty = controlTreeTable.getSelectionModel().selectedItemProperty();
+        ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty = sensorTreeTable.getSelectionModel().selectedItemProperty();
 
-        fanCurvePaneContainer.getChildren().add(notSelectedPane);
+        NotSelectedPane notSelectedPane = new NotSelectedPane();
+        NotControlledPane notControlledPane = new NotControlledPane(selectedControlProperty);
+        CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService, selectedControlProperty, selectedSensorProperty);
+        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedControlProperty, selectedSensorProperty);
+
+        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedControlProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selControl, TreeItem<HardwareTreeElement> selSensor) -> {
+            if (selControl == null || !(selControl.getValue() instanceof Control)) {
+                return FXCollections.singletonObservableList(notSelectedPane);
+            } else if (false) {// check here if control has fan curve
+                return FXCollections.singletonObservableList(fanCurvePane);
+            } else if (selSensor == null || !(selSensor.getValue() instanceof Sensor)) {
+                return FXCollections.singletonObservableList(notControlledPane);
+            } else {
+                return FXCollections.singletonObservableList(createFanCurvePane);
+            }
+        }));
+        Bindings.bindContent(fanCurvePaneContainer.getChildren(), containerChildrenBinding);
     }
 
     private static List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {

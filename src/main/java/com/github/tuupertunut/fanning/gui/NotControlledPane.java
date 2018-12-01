@@ -23,11 +23,15 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
-import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import java.io.IOException;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
+import org.fxmisc.easybind.EasyBind;
 
 /**
  *
@@ -35,10 +39,13 @@ import javafx.scene.layout.AnchorPane;
  */
 public class NotControlledPane extends AnchorPane {
 
-    private final FanningService fanningService;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty;
 
-    public NotControlledPane(FanningService fanningService) {
-        this.fanningService = fanningService;
+    @FXML
+    private Label infoLabel;
+
+    public NotControlledPane(ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty) {
+        this.selectedControlProperty = selectedControlProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NotControlledPane.fxml"));
         fxmlLoader.setRoot(this);
@@ -53,5 +60,13 @@ public class NotControlledPane extends AnchorPane {
 
     @FXML
     private void initialize() {
+        infoLabel.textProperty().bind(EasyBind.map(selectedControlProperty, (TreeItem<HardwareTreeElement> selControl) -> {
+            if (selControl == null) {
+                /* This is never visible */
+                return "";
+            } else {
+                return "Control " + selControl.getValue().getName() + " not controlled. Select a sensor to create a fan curve.";
+            }
+        }));
     }
 }

@@ -24,9 +24,12 @@
 package com.github.tuupertunut.fanning.gui;
 
 import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import java.io.IOException;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 
 /**
@@ -36,9 +39,13 @@ import javafx.scene.layout.AnchorPane;
 public class FanCurvePane extends AnchorPane {
 
     private final FanningService fanningService;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty;
+    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty;
 
-    public FanCurvePane(FanningService fanningService) {
+    public FanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedControlProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
         this.fanningService = fanningService;
+        this.selectedControlProperty = selectedControlProperty;
+        this.selectedSensorProperty = selectedSensorProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanCurvePane.fxml"));
         fxmlLoader.setRoot(this);
