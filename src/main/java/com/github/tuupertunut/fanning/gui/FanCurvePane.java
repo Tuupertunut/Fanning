@@ -23,14 +23,19 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
+import com.github.tuupertunut.fanning.core.FanCurve;
 import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import java.io.IOException;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
+import org.fxmisc.easybind.EasyBind;
 
 /**
  *
@@ -40,12 +45,13 @@ public class FanCurvePane extends AnchorPane {
 
     private final FanningService fanningService;
     private final ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty;
-    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty;
 
-    public FanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
+    @FXML
+    private Label infoLabel;
+
+    public FanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty) {
         this.fanningService = fanningService;
         this.selectedFanProperty = selectedFanProperty;
-        this.selectedSensorProperty = selectedSensorProperty;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanCurvePane.fxml"));
         fxmlLoader.setRoot(this);
@@ -60,5 +66,13 @@ public class FanCurvePane extends AnchorPane {
 
     @FXML
     private void initialize() {
+        infoLabel.textProperty().bind(EasyBind.combine(selectedFanProperty, fanningService.fanCurvesProperty(), (TreeItem<HardwareTreeElement> selFan, ObservableList<FanCurve> fanCurves) -> {
+            if (selFan == null || !(selFan.getValue() instanceof FanController) || !fanningService.findCurveOfFan((FanController) selFan.getValue()).isPresent()) {
+                /* This is never visible */
+                return "";
+            } else {
+                return "Control " + selFan.getValue().getName() + " controlled by sensor " + fanningService.findCurveOfFan((FanController) selFan.getValue()).get().getSource().getName();
+            }
+        }));
     }
 }

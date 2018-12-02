@@ -32,8 +32,7 @@ THE SOFTWARE.
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<fx:root id="AnchorPane" prefHeight="600.0" prefWidth="800.0" type="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+<fx:root id="AnchorPane" prefHeight="600.0" prefWidth="800.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -59,7 +58,7 @@ THE SOFTWARE.
                         <HBox alignment="CENTER_LEFT" spacing="14.0" BorderPane.alignment="CENTER">
                            <children>
                               <Button mnemonicParsing="false" text="Delete fan curve" />
-                              <Label text="Text here: control x controlled by sensor y" />
+                              <Label fx:id="infoLabel" text="infoLabel" />
                            </children>
                         </HBox>
                      </center>

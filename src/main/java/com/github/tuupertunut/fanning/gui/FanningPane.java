@@ -96,12 +96,12 @@ public class FanningPane extends AnchorPane {
         NotSelectedPane notSelectedPane = new NotSelectedPane();
         NotControlledPane notControlledPane = new NotControlledPane(selectedFanProperty);
         CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
-        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
+        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedFanProperty);
 
         containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedFanProperty, selectedSensorProperty, fanningService.fanCurvesProperty(), (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor, ObservableList<FanCurve> fanCurves) -> {
             if (selFan == null || !(selFan.getValue() instanceof FanController)) {
                 return FXCollections.singletonObservableList(notSelectedPane);
-            } else if (fanningService.isFanControlled((FanController) selFan.getValue())) {
+            } else if (fanningService.findCurveOfFan((FanController) selFan.getValue()).isPresent()) {
                 return FXCollections.singletonObservableList(fanCurvePane);
             } else if (selSensor == null || !(selSensor.getValue() instanceof Sensor)) {
                 return FXCollections.singletonObservableList(notControlledPane);

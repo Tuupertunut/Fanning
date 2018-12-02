@@ -26,6 +26,7 @@ package com.github.tuupertunut.fanning.core;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.beans.property.ListProperty;
@@ -68,12 +69,12 @@ public class FanningService {
         return fanCurves;
     }
 
-    public boolean isFanControlled(FanController fan) {
+    public Optional<FanCurve> findCurveOfFan(FanController fan) {
         for (FanCurve curve : fanCurves) {
             if (curve.getTarget().equals(fan)) {
-                return true;
+                return Optional.of(curve);
             }
         }
-        return false;
+        return Optional.empty();
     }
 }
