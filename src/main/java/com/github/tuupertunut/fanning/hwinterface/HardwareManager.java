@@ -27,6 +27,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -105,5 +106,23 @@ public interface HardwareManager {
         }
 
         return hardware;
+    }
+
+    default Optional<Sensor> findSensorById(String sensorId) {
+        for (Sensor sensor : getAllSensors()) {
+            if (sensor.getId().equals(sensorId)) {
+                return Optional.of(sensor);
+            }
+        }
+        return Optional.empty();
+    }
+
+    default Optional<FanController> findFanControllerById(String fanControllerId) {
+        for (FanController fan : getAllFanControllers()) {
+            if (fan.getId().equals(fanControllerId)) {
+                return Optional.of(fan);
+            }
+        }
+        return Optional.empty();
     }
 }
