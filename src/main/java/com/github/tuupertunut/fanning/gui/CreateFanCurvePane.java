@@ -26,7 +26,6 @@ package com.github.tuupertunut.fanning.gui;
 import com.github.tuupertunut.fanning.core.FanCurve;
 import com.github.tuupertunut.fanning.core.FanningService;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
-import com.github.tuupertunut.fanning.hwinterface.HardwareTreeElement;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.io.IOException;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +34,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 import org.fxmisc.easybind.EasyBind;
 
@@ -46,15 +44,15 @@ import org.fxmisc.easybind.EasyBind;
 public class CreateFanCurvePane extends AnchorPane {
 
     private final FanningService fanningService;
-    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty;
-    private final ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty;
+    private final ObservableValue<FanController> selectedFanProperty;
+    private final ObservableValue<Sensor> selectedSensorProperty;
 
     @FXML
     private Label infoLabel;
     @FXML
     private Button createButton;
 
-    public CreateFanCurvePane(FanningService fanningService, ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty, ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty) {
+    public CreateFanCurvePane(FanningService fanningService, ObservableValue<FanController> selectedFanProperty, ObservableValue<Sensor> selectedSensorProperty) {
         this.fanningService = fanningService;
         this.selectedFanProperty = selectedFanProperty;
         this.selectedSensorProperty = selectedSensorProperty;
@@ -72,17 +70,17 @@ public class CreateFanCurvePane extends AnchorPane {
 
     @FXML
     private void initialize() {
-        infoLabel.textProperty().bind(EasyBind.combine(selectedFanProperty, selectedSensorProperty, (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor) -> {
+        infoLabel.textProperty().bind(EasyBind.combine(selectedFanProperty, selectedSensorProperty, (FanController selFan, Sensor selSensor) -> {
             if (selFan == null || selSensor == null) {
                 /* This is never visible */
                 return "";
             } else {
-                return "Fan " + selFan.getValue().getName() + " to be controlled by sensor " + selSensor.getValue().getName();
+                return "Fan " + selFan.getName() + " to be controlled by sensor " + selSensor.getName();
             }
         }));
 
         createButton.setOnAction((ActionEvent event) -> {
-            fanningService.fanCurvesProperty().add(new FanCurve((Sensor) selectedSensorProperty.getValue().getValue(), (FanController) selectedFanProperty.getValue().getValue()));
+            fanningService.fanCurvesProperty().add(new FanCurve(selectedSensorProperty.getValue(), selectedFanProperty.getValue()));
         });
     }
 }

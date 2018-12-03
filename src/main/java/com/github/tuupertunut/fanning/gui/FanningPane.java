@@ -34,10 +34,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
+import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ListBinding;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -90,23 +90,44 @@ public class FanningPane extends AnchorPane {
         fanTreeTable.getColumns().setAll(createFanTreeTableColumns());
         fanTreeTable.setRoot(createFanTreeTableModel(fanningService.getHardwareManager().getHardwareRoot()));
 
-        ObservableValue<TreeItem<HardwareTreeElement>> selectedFanProperty = fanTreeTable.getSelectionModel().selectedItemProperty();
-        ObservableValue<TreeItem<HardwareTreeElement>> selectedSensorProperty = sensorTreeTable.getSelectionModel().selectedItemProperty();
+        Binding<FanController> selectedFanProperty = EasyBind.map(fanTreeTable.getSelectionModel().selectedItemProperty(), (TreeItem<HardwareTreeElement> selFanTreeRow) -> {
+            if (selFanTreeRow != null && selFanTreeRow.getValue() instanceof FanController) {
+                return (FanController) selFanTreeRow.getValue();
+            } else {
+                return null;
+            }
+        });
+        Binding<Sensor> selectedSensorProperty = EasyBind.map(sensorTreeTable.getSelectionModel().selectedItemProperty(), (TreeItem<HardwareTreeElement> selSensorTreeRow) -> {
+            if (selSensorTreeRow != null && selSensorTreeRow.getValue() instanceof Sensor) {
+                return (Sensor) selSensorTreeRow.getValue();
+            } else {
+                return null;
+            }
+        });
+        Binding<FanCurve> selectedFanCurveProperty = EasyBind.combine(selectedFanProperty, fanningService.fanCurvesProperty(), (FanController selFan, ObservableList<FanCurve> fanCurves) -> {
+            if (selFan != null && fanningService.findCurveOfFan(selFan).isPresent()) {
+                return fanningService.findCurveOfFan(selFan).get();
+            } else {
+                return null;
+            }
+        });
 
         NotSelectedPane notSelectedPane = new NotSelectedPane();
         NotControlledPane notControlledPane = new NotControlledPane(selectedFanProperty);
         CreateFanCurvePane createFanCurvePane = new CreateFanCurvePane(fanningService, selectedFanProperty, selectedSensorProperty);
-        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedFanProperty);
+        FanCurvePane fanCurvePane = new FanCurvePane(fanningService, selectedFanCurveProperty);
 
-        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedFanProperty, selectedSensorProperty, fanningService.fanCurvesProperty(), (TreeItem<HardwareTreeElement> selFan, TreeItem<HardwareTreeElement> selSensor, ObservableList<FanCurve> fanCurves) -> {
-            if (selFan == null || !(selFan.getValue() instanceof FanController)) {
-                return FXCollections.singletonObservableList(notSelectedPane);
-            } else if (fanningService.findCurveOfFan((FanController) selFan.getValue()).isPresent()) {
-                return FXCollections.singletonObservableList(fanCurvePane);
-            } else if (selSensor == null || !(selSensor.getValue() instanceof Sensor)) {
-                return FXCollections.singletonObservableList(notControlledPane);
+        containerChildrenBinding = new ObservableListBinding<>(EasyBind.combine(selectedFanProperty, selectedSensorProperty, selectedFanCurveProperty, (FanController selFan, Sensor selSensor, FanCurve selFanCurve) -> {
+            if (selFan != null) {
+                if (selFanCurve != null) {
+                    return FXCollections.singletonObservableList(fanCurvePane);
+                } else if (selSensor != null) {
+                    return FXCollections.singletonObservableList(createFanCurvePane);
+                } else {
+                    return FXCollections.singletonObservableList(notControlledPane);
+                }
             } else {
-                return FXCollections.singletonObservableList(createFanCurvePane);
+                return FXCollections.singletonObservableList(notSelectedPane);
             }
         }));
         Bindings.bindContent(fanCurvePaneContainer.getChildren(), containerChildrenBinding);
