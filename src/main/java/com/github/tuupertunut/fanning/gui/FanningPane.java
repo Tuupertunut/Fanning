@@ -133,7 +133,7 @@ public class FanningPane extends AnchorPane {
         Bindings.bindContent(fanCurvePaneContainer.getChildren(), containerChildrenBinding);
     }
 
-    private static List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {
+    private List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {
 
         TreeTableColumn<HardwareTreeElement, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
         sensorNameColumn.setPrefWidth(150);
@@ -171,6 +171,7 @@ public class FanningPane extends AnchorPane {
     }
 
     private static TreeItem<HardwareTreeElement> createSensorTreeTableModel(HardwareItem hw) {
+
         TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
         treeItem.setExpanded(true);
 
@@ -184,7 +185,7 @@ public class FanningPane extends AnchorPane {
         return treeItem;
     }
 
-    private static List<TreeTableColumn<HardwareTreeElement, ?>> createFanTreeTableColumns() {
+    private List<TreeTableColumn<HardwareTreeElement, ?>> createFanTreeTableColumns() {
 
         TreeTableColumn<HardwareTreeElement, String> fanNameColumn = new TreeTableColumn<>("Fan");
         fanNameColumn.setPrefWidth(150);
@@ -192,18 +193,6 @@ public class FanningPane extends AnchorPane {
 
             HardwareTreeElement elem = data.getValue().getValue();
             return new ReadOnlyStringWrapper(elem.getName());
-        });
-
-        TreeTableColumn<HardwareTreeElement, String> fanTypeColumn = new TreeTableColumn<>("Type");
-        fanTypeColumn.setPrefWidth(100);
-        fanTypeColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
-
-            HardwareTreeElement elem = data.getValue().getValue();
-            if (elem instanceof FanController) {
-                return new ReadOnlyStringWrapper(((FanController) elem).getSensorType());
-            } else {
-                return new ReadOnlyStringWrapper("");
-            }
         });
 
         TreeTableColumn<HardwareTreeElement, String> fanValueColumn = new TreeTableColumn<>("Controlled value");
@@ -216,6 +205,24 @@ public class FanningPane extends AnchorPane {
                     if (value.isPresent()) {
                         return Double.toString(value.getAsDouble()) + " " + ((FanController) elem).getMeasurementUnit();
                     } else {
+                        return "No value";
+                    }
+                });
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
+        });
+
+        TreeTableColumn<HardwareTreeElement, String> fanControlledColumn = new TreeTableColumn<>("Controlled by");
+        fanControlledColumn.setPrefWidth(100);
+        fanControlledColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
+
+            HardwareTreeElement elem = data.getValue().getValue();
+            if (elem instanceof FanController) {
+                return EasyBind.map(fanningService.fanCurvesProperty(), (ObservableList<FanCurve> fanCurves) -> {
+                    if (fanningService.findCurveOfFan((FanController) elem).isPresent()) {
+                        return fanningService.findCurveOfFan((FanController) elem).get().getSource().getName();
+                    } else {
                         return "Not controlled";
                     }
                 });
@@ -224,10 +231,11 @@ public class FanningPane extends AnchorPane {
             }
         });
 
-        return Arrays.asList(fanNameColumn, fanTypeColumn, fanValueColumn);
+        return Arrays.asList(fanNameColumn, fanValueColumn, fanControlledColumn);
     }
 
     private static TreeItem<HardwareTreeElement> createFanTreeTableModel(HardwareItem hw) {
+
         TreeItem<HardwareTreeElement> treeItem = new TreeItem<>(hw);
         treeItem.setExpanded(true);
 
