@@ -21,11 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.tuupertunut.fanning;
+package com.github.tuupertunut.fanning.hwinterface;
 
-import com.github.tuupertunut.fanning.hwinterface.FanController;
-import com.github.tuupertunut.fanning.hwinterface.HardwareItem;
-import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import com.github.tuupertunut.fanning.mockhardware.MockFanController;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareItem;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
