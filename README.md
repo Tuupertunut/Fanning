@@ -1,6 +1,10 @@
 # Fanning
 
-[Työaikakirjanpito](https://github.com/Tuupertunut/Fanning/blob/master/documentation/tyoaikakirjanpito.md)
+A desktop application for automatically controlling computer fan speeds based on values of temperature sensors. It features a GUI for defining mappings from temperatures to fan speeds.
+
+## Releases
+
+[Latest release](https://github.com/Tuupertunut/Fanning/releases)
 
 ## Documentation
 
@@ -8,9 +12,9 @@
 
 [Architecture](https://github.com/Tuupertunut/Fanning/blob/master/documentation/architecture.md)
 
-## Usage
+## Development
 
-### Run
+### Run project
 
 ```
 mvn package exec:java
@@ -20,6 +24,12 @@ mvn package exec:java
 
 ```
 mvn test
+```
+
+### Build executable jar
+
+```
+mvn package
 ```
 
 ### Generate test coverage report
@@ -33,3 +43,5 @@ mvn test jacoco:report
 ```
 mvn jxr:jxr checkstyle:checkstyle
 ```
+
+[Työaikakirjanpito](https://github.com/Tuupertunut/Fanning/blob/master/documentation/tyoaikakirjanpito.md)
