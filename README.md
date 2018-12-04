@@ -13,7 +13,7 @@
 ### Run
 
 ```
-java -jar target/Fanning-*version here*.jar
+mvn package exec:java
 ```
 
 ### Run tests
