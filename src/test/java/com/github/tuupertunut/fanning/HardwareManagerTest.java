@@ -41,22 +41,24 @@ import org.junit.Test;
  */
 public class HardwareManagerTest {
 
+    MockSensor sgf;
+    MockFanController fg;
     MockHardwareManager hwManager;
 
     @Before
     public void setUp() {
-        MockSensor sa = new MockSensor("fake cpu core1 temp", "sct1", "Temperature", "°C");
-        MockSensor se = new MockSensor("fake cpu fan percent", "scp", "Control", "%");
-        MockFanController fa = new MockFanController(se, "fc", 30, 50);
-        MockHardwareItem ha = new MockHardwareItem(Arrays.asList(), Arrays.asList(sa, se), Arrays.asList(fa), "fake cpu", "hc");
+        MockSensor sct1 = new MockSensor("fake cpu core1 temp", "sct1", "Temperature", "°C");
+        MockSensor scp = new MockSensor("fake cpu fan percent", "scp", "Control", "%");
+        MockFanController fc = new MockFanController(scp, "fc", 30, 50);
+        MockHardwareItem hc = new MockHardwareItem(Arrays.asList(), Arrays.asList(sct1, scp), Arrays.asList(fc), "fake cpu", "hc");
 
-        MockSensor sf = new MockSensor("fake gpu temp", "sgt", "Temperature", "°C");
-        MockSensor sg = new MockSensor("fake gpu fan speed", "sgf", "Fan speed", "RPM");
-        MockSensor sh = new MockSensor("fake gpu fan percent", "sgp", "Control", "%");
-        MockFanController fb = new MockFanController(sh, "fg", 0, 100);
-        MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sf, sg, sh), Arrays.asList(fb), "fake gpu", "hg");
+        MockSensor sgt = new MockSensor("fake gpu temp", "sgt", "Temperature", "°C");
+        sgf = new MockSensor("fake gpu fan speed", "sgf", "Fan speed", "RPM");
+        MockSensor sgp = new MockSensor("fake gpu fan percent", "sgp", "Control", "%");
+        fg = new MockFanController(sgp, "fg", 0, 100);
+        MockHardwareItem hg = new MockHardwareItem(Arrays.asList(), Arrays.asList(sgt, sgf, sgp), Arrays.asList(fg), "fake gpu", "hg");
 
-        MockHardwareItem root = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
+        MockHardwareItem root = new MockHardwareItem(Arrays.asList(hc, hg), Arrays.asList(), Arrays.asList(), "computer", "c");
 
         hwManager = new MockHardwareManager(root);
     }
@@ -74,5 +76,15 @@ public class HardwareManagerTest {
     @Test
     public void testGetAllFanControllers() {
         Assert.assertArrayEquals(new String[]{"fc", "fg"}, hwManager.getAllFanControllers().stream().map(FanController::getId).toArray());
+    }
+
+    @Test
+    public void testFindSensorById() {
+        Assert.assertEquals(sgf, hwManager.findSensorById("sgf").get());
+    }
+
+    @Test
+    public void testFindFanControllerById() {
+        Assert.assertEquals(fg, hwManager.findFanControllerById("fg").get());
     }
 }
