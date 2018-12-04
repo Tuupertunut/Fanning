@@ -15,3 +15,9 @@
 | 26.11 | 4h   | käyttöliittymä kokonaiseksi |
 | 27.11 | 1h   | käyttöliittymän ja sovelluslogiikan erottelu |
 | 27.11 | 3h   | arkkitehtuuridokumentaatio ja readme |
+| 29.11 | 8h   | käyttöliittymän sisältöpaneelit |
+| 1.12  | 5h   | näytettävän paneelin vaihtaminen ja sen tutkiminen |
+| 2.12  | 3h   | sekalaista pikkukoodausta |
+| 3.12  | 4h   | sisältöpaneelien sisällön päivitys |
+| 4.12  | 6h   | ulkoasun hiomista ja testejä |
+| 4.12  | 2h   | dokumentaatio ja readme |
