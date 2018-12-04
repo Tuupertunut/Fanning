@@ -136,7 +136,7 @@ public class FanningPane extends AnchorPane {
     private List<TreeTableColumn<HardwareTreeElement, ?>> createSensorTreeTableColumns() {
 
         TreeTableColumn<HardwareTreeElement, String> sensorNameColumn = new TreeTableColumn<>("Sensor");
-        sensorNameColumn.setPrefWidth(150);
+        sensorNameColumn.setPrefWidth(200);
         sensorNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
@@ -188,7 +188,7 @@ public class FanningPane extends AnchorPane {
     private List<TreeTableColumn<HardwareTreeElement, ?>> createFanTreeTableColumns() {
 
         TreeTableColumn<HardwareTreeElement, String> fanNameColumn = new TreeTableColumn<>("Fan");
-        fanNameColumn.setPrefWidth(150);
+        fanNameColumn.setPrefWidth(200);
         fanNameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
@@ -196,7 +196,7 @@ public class FanningPane extends AnchorPane {
         });
 
         TreeTableColumn<HardwareTreeElement, String> fanValueColumn = new TreeTableColumn<>("Controlled value");
-        fanValueColumn.setPrefWidth(100);
+        fanValueColumn.setPrefWidth(130);
         fanValueColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
@@ -214,7 +214,7 @@ public class FanningPane extends AnchorPane {
         });
 
         TreeTableColumn<HardwareTreeElement, String> fanControlledColumn = new TreeTableColumn<>("Controlled by");
-        fanControlledColumn.setPrefWidth(100);
+        fanControlledColumn.setPrefWidth(150);
         fanControlledColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<HardwareTreeElement, String> data) -> {
 
             HardwareTreeElement elem = data.getValue().getValue();
