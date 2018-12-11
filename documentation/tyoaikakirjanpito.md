@@ -21,3 +21,12 @@
 | 3.12  | 4h   | sisältöpaneelien sisällön päivitys |
 | 4.12  | 6h   | ulkoasun hiomista ja testejä |
 | 4.12  | 2h   | dokumentaatio ja readme |
+| 5.12  | 6h   | muokattavan taulukon suunnittelu |
+| 6.12  | 8h   | muokattavan taulukon debuggaus |
+| 8.12  | 4h   | muokattavan taulukon debuggaus |
+| 9.12  | 3h   | muokattavan taulukon debuggaus |
+| 10.12 | 6h   | muokattavan taulukon debuggaus |
+| 11.12 | 7h   | muokattava taulukko vihdoin valmis |
+| 11.12 | 2h   | dokumentaatio |
+
+Yhteensä 105h
