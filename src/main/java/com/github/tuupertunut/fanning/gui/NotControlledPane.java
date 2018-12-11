@@ -64,7 +64,7 @@ public class NotControlledPane extends AnchorPane {
                 /* This is never visible */
                 return "";
             } else {
-                return "Fan " + selFan.getName() + " not controlled. Select a sensor to create a fan curve.";
+                return "Fan '" + selFan.getName() + "' not controlled. Select a sensor to create a fan curve.";
             }
         }));
     }

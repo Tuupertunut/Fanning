@@ -75,7 +75,7 @@ public class CreateFanCurvePane extends AnchorPane {
                 /* This is never visible */
                 return "";
             } else {
-                return "Fan " + selFan.getName() + " to be controlled by sensor " + selSensor.getName();
+                return "Fan '" + selFan.getName() + "' to be controlled by sensor '" + selSensor.getName() + "'";
             }
         }));
 

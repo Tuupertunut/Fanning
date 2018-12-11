@@ -78,7 +78,7 @@ public class MapTableView extends AnchorPane {
 
     @FXML
     private void initialize() {
-        TableColumn<Mapping, Double> keyColumn = new TableColumn<>("key");
+        TableColumn<Mapping, Double> keyColumn = new TableColumn<>("Sensor");
         keyColumn.setCellFactory((TableColumn<Mapping, Double> column) -> {
 
             BiConsumer<Mapping, Double> editAction = (Mapping rowValue, Double newCellValue) -> {
@@ -93,7 +93,7 @@ public class MapTableView extends AnchorPane {
             return data.getValue().key;
         });
 
-        TableColumn<Mapping, Double> valueColumn = new TableColumn<>("value");
+        TableColumn<Mapping, Double> valueColumn = new TableColumn<>("Fan");
         valueColumn.setCellFactory((TableColumn<Mapping, Double> column) -> {
 
             BiConsumer<Mapping, Double> editAction = (Mapping rowValue, Double newCellValue) -> {
