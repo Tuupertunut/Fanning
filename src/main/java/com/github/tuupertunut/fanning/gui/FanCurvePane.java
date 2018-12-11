@@ -28,6 +28,7 @@ import com.github.tuupertunut.fanning.core.FanningService;
 import java.io.IOException;
 import java.util.Optional;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import org.fxmisc.easybind.EasyBind;
 
 /**
@@ -47,6 +49,9 @@ public class FanCurvePane extends AnchorPane {
     private final FanningService fanningService;
     private final ObservableValue<FanCurve> selectedFanCurveProperty;
 
+    private MapTableView mapEditor;
+    @FXML
+    private StackPane mapEditorContainer;
     @FXML
     private Label infoLabel;
     @FXML
@@ -71,6 +76,18 @@ public class FanCurvePane extends AnchorPane {
 
     @FXML
     private void initialize() {
+        mapEditor = new MapTableView();
+        mapEditorContainer.getChildren().add(mapEditor);
+
+        mapEditor.mapProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
+            if (selFanCurve == null) {
+                /* This is never visible */
+                return FXCollections.emptyObservableMap();
+            } else {
+                return selFanCurve.changePointsProperty();
+            }
+        }));
+
         infoLabel.textProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
             if (selFanCurve == null) {
                 /* This is never visible */
