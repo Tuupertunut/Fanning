@@ -81,6 +81,7 @@ public class MapTableView extends AnchorPane {
         TableColumn<Mapping, Double> keyColumn = new TableColumn<>("Sensor");
         keyColumn.setCellFactory((TableColumn<Mapping, Double> column) -> {
 
+            /* Key mutation handling. */
             BiConsumer<Mapping, Double> editAction = (Mapping rowValue, Double newCellValue) -> {
                 Double oldValue = rowValue.value.get();
                 map.remove(rowValue.key.get());
@@ -96,6 +97,7 @@ public class MapTableView extends AnchorPane {
         TableColumn<Mapping, Double> valueColumn = new TableColumn<>("Fan");
         valueColumn.setCellFactory((TableColumn<Mapping, Double> column) -> {
 
+            /* Value mutation handling. */
             BiConsumer<Mapping, Double> editAction = (Mapping rowValue, Double newCellValue) -> {
                 map.put(rowValue.key.get(), newCellValue);
             };
@@ -109,6 +111,7 @@ public class MapTableView extends AnchorPane {
         TableColumn<Mapping, Object> deleteButtonColumn = new TableColumn<>();
         deleteButtonColumn.setCellFactory((TableColumn<Mapping, Object> column) -> {
 
+            /* Deletion handling. */
             Consumer<Mapping> buttonAction = (Mapping rowValue) -> {
                 map.remove(rowValue.key.get());
             };
@@ -116,6 +119,8 @@ public class MapTableView extends AnchorPane {
         });
         deleteButtonColumn.setCellValueFactory((TableColumn.CellDataFeatures<Mapping, Object> data) -> {
 
+            /* There are no values in the delete button column, so returning
+             * empty wrapper. */
             return new ReadOnlyObjectWrapper<>();
         });
 
@@ -124,6 +129,7 @@ public class MapTableView extends AnchorPane {
 
         ObservableList<Mapping> tableItems = mapTable.getItems();
 
+        /* Insertion handling. */
         addButton.setOnAction((ActionEvent event) -> {
             if (validateDoubleString(addKeyField.getText()) && validateDoubleString(addValueField.getText())) {
 
@@ -141,8 +147,10 @@ public class MapTableView extends AnchorPane {
             }
         });
 
+        /* Adding map listener that updates the table items list. */
         map.addListener((MapChangeListener.Change<? extends Double, ? extends Double> change) -> {
             if (change.wasRemoved() && change.wasAdded()) {
+
                 for (Mapping m : tableItems) {
                     if (m.key.get().equals(change.getKey())) {
                         m.value.set(change.getValueAdded());
@@ -150,6 +158,7 @@ public class MapTableView extends AnchorPane {
                     }
                 }
             } else if (change.wasAdded()) {
+
                 Mapping m = new Mapping();
                 m.key.set(change.getKey());
                 m.value.set(change.getValueAdded());
@@ -165,6 +174,7 @@ public class MapTableView extends AnchorPane {
                     tableItems.add(m);
                 }
             } else {
+
                 for (Mapping m : tableItems) {
                     if (m.key.get().equals(change.getKey())) {
                         tableItems.remove(m);
