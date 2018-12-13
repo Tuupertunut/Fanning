@@ -23,18 +23,16 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
+import com.github.tuupertunut.fanning.core.Mapping;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,9 +47,9 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author Tuupertunut
  */
-public class MapTableView extends AnchorPane {
+public class FanCurveTableView extends AnchorPane {
 
-    private final MapProperty<Double, Double> map;
+    private final ListProperty<Mapping> changePoints;
 
     @FXML
     private TableView<Mapping> mapTable;
@@ -62,10 +60,10 @@ public class MapTableView extends AnchorPane {
     @FXML
     private TextField addValueField;
 
-    public MapTableView() {
-        map = new SimpleMapProperty<>(FXCollections.observableHashMap());
+    public FanCurveTableView() {
+        changePoints = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MapTableView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FanCurveTableView.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -83,15 +81,16 @@ public class MapTableView extends AnchorPane {
 
             /* Key mutation handling. */
             BiConsumer<Mapping, Double> editAction = (Mapping rowValue, Double newCellValue) -> {
-                Double oldValue = rowValue.value.get();
-                map.remove(rowValue.key.get());
-                map.put(newCellValue, oldValue);
+                Double oldValue = rowValue.value;
+                changePoints.remove(rowValue);
+                changePoints.removeIf((Mapping m) -> m.key == newCellValue);
+                changePoints.add(new Mapping(newCellValue, oldValue));
             };
             return new DoubleTextFieldTableCell(editAction);
         });
         keyColumn.setCellValueFactory((TableColumn.CellDataFeatures<Mapping, Double> data) -> {
 
-            return data.getValue().key;
+            return new ReadOnlyObjectWrapper<>(data.getValue().key);
         });
 
         TableColumn<Mapping, Double> valueColumn = new TableColumn<>("Fan");
@@ -99,13 +98,15 @@ public class MapTableView extends AnchorPane {
 
             /* Value mutation handling. */
             BiConsumer<Mapping, Double> editAction = (Mapping rowValue, Double newCellValue) -> {
-                map.put(rowValue.key.get(), newCellValue);
+                Double oldKey = rowValue.key;
+                changePoints.remove(rowValue);
+                changePoints.add(new Mapping(oldKey, newCellValue));
             };
             return new DoubleTextFieldTableCell(editAction);
         });
         valueColumn.setCellValueFactory((TableColumn.CellDataFeatures<Mapping, Double> data) -> {
 
-            return data.getValue().value;
+            return new ReadOnlyObjectWrapper<>(data.getValue().value);
         });
 
         TableColumn<Mapping, Object> deleteButtonColumn = new TableColumn<>();
@@ -113,7 +114,7 @@ public class MapTableView extends AnchorPane {
 
             /* Deletion handling. */
             Consumer<Mapping> buttonAction = (Mapping rowValue) -> {
-                map.remove(rowValue.key.get());
+                changePoints.remove(rowValue);
             };
             return new ButtonTableCell(buttonAction);
         });
@@ -126,14 +127,16 @@ public class MapTableView extends AnchorPane {
 
         mapTable.getColumns().setAll(keyColumn, valueColumn, deleteButtonColumn);
         mapTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        ObservableList<Mapping> tableItems = mapTable.getItems();
+        mapTable.setItems(changePoints.sorted(Comparator.comparingDouble((Mapping m) -> m.key)));
 
         /* Insertion handling. */
         addButton.setOnAction((ActionEvent event) -> {
             if (validateDoubleString(addKeyField.getText()) && validateDoubleString(addValueField.getText())) {
 
-                map.put(Double.parseDouble(addKeyField.getText()), Double.parseDouble(addValueField.getText()));
+                double newKey = Double.parseDouble(addKeyField.getText());
+                double newValue = Double.parseDouble(addValueField.getText());
+                changePoints.removeIf((Mapping m) -> m.key == newKey);
+                changePoints.add(new Mapping(newKey, newValue));
 
                 addKeyField.setText("");
                 addValueField.setText("");
@@ -146,47 +149,10 @@ public class MapTableView extends AnchorPane {
                 }
             }
         });
-
-        /* Adding map listener that updates the table items list. */
-        map.addListener((MapChangeListener.Change<? extends Double, ? extends Double> change) -> {
-            if (change.wasRemoved() && change.wasAdded()) {
-
-                for (Mapping m : tableItems) {
-                    if (m.key.get().equals(change.getKey())) {
-                        m.value.set(change.getValueAdded());
-                        break;
-                    }
-                }
-            } else if (change.wasAdded()) {
-
-                Mapping m = new Mapping();
-                m.key.set(change.getKey());
-                m.value.set(change.getValueAdded());
-                boolean found = false;
-                for (int i = 0; i < tableItems.size(); i++) {
-                    if (tableItems.get(i).key.get() >= change.getKey()) {
-                        tableItems.add(i, m);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    tableItems.add(m);
-                }
-            } else {
-
-                for (Mapping m : tableItems) {
-                    if (m.key.get().equals(change.getKey())) {
-                        tableItems.remove(m);
-                        break;
-                    }
-                }
-            }
-        });
     }
 
-    public MapProperty<Double, Double> mapProperty() {
-        return map;
+    public ListProperty<Mapping> changePointsProperty() {
+        return changePoints;
     }
 
     private static boolean validateDoubleString(String s) {
@@ -195,12 +161,6 @@ public class MapTableView extends AnchorPane {
         } catch (NumberFormatException ex) {
             return false;
         }
-    }
-
-    private static class Mapping {
-
-        ObjectProperty<Double> key = new SimpleObjectProperty<>();
-        ObjectProperty<Double> value = new SimpleObjectProperty<>();
     }
 
     private static class ButtonTableCell extends TableCell<Mapping, Object> {
@@ -261,7 +221,10 @@ public class MapTableView extends AnchorPane {
              * back to previous value. */
             if (!newValue) {
                 if (validateDoubleString(tf.getText())) {
-                    editAction.accept(getRowValue(), Double.parseDouble(tf.getText()));
+                    double newCellValue = Double.parseDouble(tf.getText());
+                    if (newCellValue != this.getItem()) {
+                        editAction.accept(getRowValue(), newCellValue);
+                    }
                 } else {
                     tf.setText(Double.toString(this.getItem()));
                 }

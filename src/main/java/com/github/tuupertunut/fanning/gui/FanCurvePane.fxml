@@ -43,7 +43,7 @@ THE SOFTWARE.
                         <Label text="Chart here" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
                      </children>
                   </AnchorPane>
-                  <StackPane fx:id="mapEditorContainer" />
+                  <StackPane fx:id="fanCurveEditorContainer" />
                </items>
             </SplitPane>
          </center>

@@ -23,12 +23,13 @@
  */
 package com.github.tuupertunut.fanning.core;
 
-import com.github.tuupertunut.fanning.hwinterface.Sensor;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
+import com.github.tuupertunut.fanning.hwinterface.Sensor;
+import java.util.List;
+import java.util.OptionalDouble;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 
 /**
  *
@@ -36,20 +37,14 @@ import com.github.tuupertunut.fanning.hwinterface.FanController;
  */
 public class FanCurve {
 
-    /* In order to use NavigableMap specific methods, the internal
-     * implementation must be available. */
-    private final NavigableMap<Double, Double> internalChangePointsMap;
-
     private final Sensor source;
     private final FanController target;
-    private final ObservableMap<Double, Double> changePoints;
+    private final ListProperty<Mapping> changePoints;
 
-    public FanCurve(Sensor source, FanController target) {
+    public FanCurve(Sensor source, FanController target, List<Mapping> changePoints) {
         this.source = source;
         this.target = target;
-
-        internalChangePointsMap = new TreeMap<>();
-        changePoints = FXCollections.observableMap(internalChangePointsMap);
+        this.changePoints = new SimpleListProperty<>(FXCollections.observableArrayList(changePoints));
     }
 
     public Sensor getSource() {
@@ -60,15 +55,27 @@ public class FanCurve {
         return target;
     }
 
-    public ObservableMap<Double, Double> changePointsProperty() {
+    public ListProperty<Mapping> changePointsProperty() {
         return changePoints;
     }
 
-    public double getTargetValueAt(double sensorValue) {
-        Double key = internalChangePointsMap.floorKey(sensorValue);
-        if (key == null) {
-            key = internalChangePointsMap.firstKey();
+    public OptionalDouble getTargetValueAt(double sensorValue) {
+        Mapping closestBelow = null;
+        Mapping smallest = null;
+        for (Mapping m : changePoints) {
+            if (m.key <= sensorValue && (closestBelow == null || m.key > closestBelow.key)) {
+                closestBelow = m;
+            }
+            if (smallest == null || m.key < smallest.key) {
+                smallest = m;
+            }
         }
-        return changePoints.get(key);
+        if (closestBelow != null) {
+            return OptionalDouble.of(closestBelow.value);
+        } else if (smallest != null) {
+            return OptionalDouble.of(smallest.value);
+        } else {
+            return OptionalDouble.empty();
+        }
     }
 }

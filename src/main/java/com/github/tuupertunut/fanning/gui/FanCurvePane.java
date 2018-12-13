@@ -49,9 +49,9 @@ public class FanCurvePane extends AnchorPane {
     private final FanningService fanningService;
     private final ObservableValue<FanCurve> selectedFanCurveProperty;
 
-    private MapTableView mapEditor;
+    private FanCurveTableView fanCurveEditor;
     @FXML
-    private StackPane mapEditorContainer;
+    private StackPane fanCurveEditorContainer;
     @FXML
     private Label infoLabel;
     @FXML
@@ -76,13 +76,13 @@ public class FanCurvePane extends AnchorPane {
 
     @FXML
     private void initialize() {
-        mapEditor = new MapTableView();
-        mapEditorContainer.getChildren().add(mapEditor);
+        fanCurveEditor = new FanCurveTableView();
+        fanCurveEditorContainer.getChildren().add(fanCurveEditor);
 
-        mapEditor.mapProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
+        fanCurveEditor.changePointsProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
             if (selFanCurve == null) {
                 /* This is never visible */
-                return FXCollections.emptyObservableMap();
+                return FXCollections.emptyObservableList();
             } else {
                 return selFanCurve.changePointsProperty();
             }

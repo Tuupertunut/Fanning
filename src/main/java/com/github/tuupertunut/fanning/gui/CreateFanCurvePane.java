@@ -28,6 +28,7 @@ import com.github.tuupertunut.fanning.core.FanningService;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.io.IOException;
+import java.util.Arrays;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -80,7 +81,7 @@ public class CreateFanCurvePane extends AnchorPane {
         }));
 
         createButton.setOnAction((ActionEvent event) -> {
-            fanningService.fanCurvesProperty().add(new FanCurve(selectedSensorProperty.getValue(), selectedFanProperty.getValue()));
+            fanningService.fanCurvesProperty().add(new FanCurve(selectedSensorProperty.getValue(), selectedFanProperty.getValue(), Arrays.asList()));
         });
     }
 }
