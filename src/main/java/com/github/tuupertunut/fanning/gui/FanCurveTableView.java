@@ -196,7 +196,14 @@ public class FanCurveTableView extends AnchorPane {
         DoubleTextFieldTableCell(BiConsumer<Mapping, Double> editAction) {
             this.editAction = editAction;
             tf = new TextField();
-            tf.focusedProperty().addListener(this::textFieldFocusListener);
+
+            /* Commit edit when pressing enter or when focus is lost. */
+            tf.setOnAction((ActionEvent event) -> tryEdit());
+            tf.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                if (!newValue) {
+                    tryEdit();
+                }
+            });
         }
 
         @Override
@@ -215,19 +222,15 @@ public class FanCurveTableView extends AnchorPane {
             }
         }
 
-        private void textFieldFocusListener(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-            /* Commit edit on focus lost. If text is invalid, reset the field
-             * back to previous value. */
-            if (!newValue) {
-                if (validateDoubleString(tf.getText())) {
-                    double newCellValue = Double.parseDouble(tf.getText());
-                    if (newCellValue != this.getItem()) {
-                        editAction.accept(getRowValue(), newCellValue);
-                    }
-                } else {
-                    tf.setText(Double.toString(this.getItem()));
+        private void tryEdit() {
+            if (validateDoubleString(tf.getText())) {
+                double newCellValue = Double.parseDouble(tf.getText());
+                if (newCellValue != this.getItem()) {
+                    editAction.accept(getRowValue(), newCellValue);
                 }
+            } else {
+                /* If text is invalid, reset the field back to previous value. */
+                tf.setText(Double.toString(this.getItem()));
             }
         }
 
