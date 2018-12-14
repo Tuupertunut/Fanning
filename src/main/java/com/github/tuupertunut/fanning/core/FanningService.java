@@ -23,9 +23,10 @@
  */
 package com.github.tuupertunut.fanning.core;
 
+import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
-import java.util.List;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -40,13 +41,19 @@ import javafx.collections.FXCollections;
 public class FanningService {
 
     private final HardwareManager hardwareManager;
+    private final Storage storage;
     private final ListProperty<FanCurve> fanCurves;
 
-    public FanningService(HardwareManager hardwareManager, List<FanCurve> fanCurves) {
+    public FanningService(HardwareManager hardwareManager, Storage storage) {
         this.hardwareManager = hardwareManager;
-        this.fanCurves = new SimpleListProperty<>(FXCollections.observableArrayList(fanCurves));
+        this.storage = storage;
+        this.fanCurves = new SimpleListProperty<>(FXCollections.observableArrayList());
 
         initUpdater();
+    }
+
+    public void loadFromStorage() throws IOException, JsonException {
+        fanCurves.setAll(storage.load());
     }
 
     private void initUpdater() {

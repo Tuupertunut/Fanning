@@ -23,12 +23,12 @@
  */
 package com.github.tuupertunut.fanning.gui;
 
-import com.github.tuupertunut.fanning.core.FanCurve;
 import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.core.JsonStorage;
+import com.github.tuupertunut.fanning.core.Storage;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.file.Paths;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -44,8 +44,9 @@ public class Fanning extends Application {
     @Override
     public void init() throws Exception {
         HardwareManager hwManager = new MockHardwareManager();
-        List<FanCurve> fanCurves = Arrays.asList();
-        fanningService = new FanningService(hwManager, fanCurves);
+        Storage jsonStorage = new JsonStorage(hwManager, Paths.get("fanCurves.json"));
+        fanningService = new FanningService(hwManager, jsonStorage);
+        fanningService.loadFromStorage();
     }
 
     @Override
