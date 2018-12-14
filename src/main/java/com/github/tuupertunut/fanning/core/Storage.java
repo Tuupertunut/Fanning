@@ -35,5 +35,5 @@ public interface Storage {
 
     List<FanCurve> load() throws IOException, JsonException;
 
-    void store(List<FanCurve> fanCurves) throws IOException, JsonException;
+    void store(List<FanCurve> fanCurves) throws IOException;
 }

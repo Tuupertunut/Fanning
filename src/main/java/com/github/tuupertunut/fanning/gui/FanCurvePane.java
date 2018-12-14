@@ -103,5 +103,13 @@ public class FanCurvePane extends AnchorPane {
                 fanningService.fanCurvesProperty().remove(selectedFanCurveProperty.getValue());
             }
         });
+
+        saveButton.setOnAction((ActionEvent event) -> {
+            try {
+                fanningService.storeToStorage();
+            } catch (IOException ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+            }
+        });
     }
 }

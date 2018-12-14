@@ -56,6 +56,10 @@ public class FanningService {
         fanCurves.setAll(storage.load());
     }
 
+    public void storeToStorage() throws IOException {
+        storage.store(fanCurves);
+    }
+
     private void initUpdater() {
         Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
