@@ -28,6 +28,7 @@ import com.github.tuupertunut.fanning.core.JsonStorage;
 import com.github.tuupertunut.fanning.core.Storage;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -44,9 +45,21 @@ public class Fanning extends Application {
     @Override
     public void init() throws Exception {
         HardwareManager hwManager = new MockHardwareManager();
-        Storage jsonStorage = new JsonStorage(hwManager, Paths.get("fanCurves.json"));
+        Storage jsonStorage = new JsonStorage(hwManager, getPlatformSpecificConfigDir().resolve("Fanning/fanCurves.json"));
         fanningService = new FanningService(hwManager, jsonStorage);
         fanningService.loadFromStorage();
+    }
+
+    /* Apache commons says this is a valid way to detect the operating system.
+     * https://github.com/apache/commons-lang/blob/LANG_3_7/src/main/java/org/apache/commons/lang3/SystemUtils.java */
+    private Path getPlatformSpecificConfigDir() {
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            return Paths.get(System.getProperty("user.home")).resolve("AppData/Local");
+        } else if (System.getProperty("os.name").startsWith("Mac OS X")) {
+            return Paths.get(System.getProperty("user.home")).resolve("Library/Application Support");
+        } else {
+            return Paths.get(System.getProperty("user.home")).resolve(".config");
+        }
     }
 
     @Override
