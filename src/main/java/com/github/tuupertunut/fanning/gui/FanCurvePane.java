@@ -93,7 +93,7 @@ public class FanCurvePane extends AnchorPane {
                 /* This is never visible */
                 return "";
             } else {
-                return "Fan '" + selFanCurve.getTarget().getName() + "' controlled by sensor '" + selFanCurve.getSource().getName() + "'";
+                return "Fan '" + selFanCurve.getFanController().getName() + "' controlled by sensor '" + selFanCurve.getSensor().getName() + "'";
             }
         }));
 

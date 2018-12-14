@@ -37,22 +37,22 @@ import javafx.collections.FXCollections;
  */
 public class FanCurve {
 
-    private final Sensor source;
-    private final FanController target;
+    private final Sensor sensor;
+    private final FanController fanController;
     private final ListProperty<Mapping> changePoints;
 
-    public FanCurve(Sensor source, FanController target, List<Mapping> changePoints) {
-        this.source = source;
-        this.target = target;
+    public FanCurve(Sensor sensor, FanController fanController, List<Mapping> changePoints) {
+        this.sensor = sensor;
+        this.fanController = fanController;
         this.changePoints = new SimpleListProperty<>(FXCollections.observableArrayList(changePoints));
     }
 
-    public Sensor getSource() {
-        return source;
+    public Sensor getSensor() {
+        return sensor;
     }
 
-    public FanController getTarget() {
-        return target;
+    public FanController getFanController() {
+        return fanController;
     }
 
     public ListProperty<Mapping> changePointsProperty() {

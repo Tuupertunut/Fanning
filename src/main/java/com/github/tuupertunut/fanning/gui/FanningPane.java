@@ -221,7 +221,7 @@ public class FanningPane extends AnchorPane {
             if (elem instanceof FanController) {
                 return EasyBind.map(fanningService.fanCurvesProperty(), (ObservableList<FanCurve> fanCurves) -> {
                     if (fanningService.findCurveOfFan((FanController) elem).isPresent()) {
-                        return fanningService.findCurveOfFan((FanController) elem).get().getSource().getName();
+                        return fanningService.findCurveOfFan((FanController) elem).get().getSensor().getName();
                     } else {
                         return "Not controlled";
                     }

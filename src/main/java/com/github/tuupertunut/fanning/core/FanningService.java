@@ -71,7 +71,7 @@ public class FanningService {
 
     public Optional<FanCurve> findCurveOfFan(FanController fan) {
         for (FanCurve curve : fanCurves) {
-            if (curve.getTarget().equals(fan)) {
+            if (curve.getFanController().equals(fan)) {
                 return Optional.of(curve);
             }
         }
