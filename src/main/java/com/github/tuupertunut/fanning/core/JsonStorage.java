@@ -33,6 +33,7 @@ import com.github.tuupertunut.fanning.hwinterface.Sensor;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -75,8 +76,8 @@ public class JsonStorage implements Storage {
             for (Object jsonMappingObj : (JsonArray) jsonFanCurve.get("changePoints")) {
                 JsonObject jsonMapping = (JsonObject) jsonMappingObj;
 
-                double key = (double) jsonMapping.get("key");
-                double value = (double) jsonMapping.get("value");
+                double key = ((BigDecimal) jsonMapping.get("key")).doubleValue();
+                double value = ((BigDecimal) jsonMapping.get("value")).doubleValue();
 
                 changePoints.add(new Mapping(key, value));
             }
