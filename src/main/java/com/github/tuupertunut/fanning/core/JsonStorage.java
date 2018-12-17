@@ -110,6 +110,7 @@ public class JsonStorage implements Storage {
             jsonFanCurves.add(jsonFanCurve);
         }
 
+        Files.createDirectories(filePath.getParent());
         try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
             Jsoner.serialize(jsonFanCurves, writer);
         }
