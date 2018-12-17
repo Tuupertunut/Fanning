@@ -25,13 +25,20 @@ package com.github.tuupertunut.fanning.gui;
 
 import com.github.tuupertunut.fanning.core.FanCurve;
 import com.github.tuupertunut.fanning.core.FanningService;
+import com.github.tuupertunut.fanning.core.Mapping;
+import com.github.tuupertunut.fanning.util.ObservableListBinding;
 import java.io.IOException;
 import java.util.Optional;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ListBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -49,7 +56,10 @@ public class FanCurvePane extends AnchorPane {
     private final FanningService fanningService;
     private final ObservableValue<FanCurve> selectedFanCurveProperty;
 
+    private LineChart<Double, Double> chart;
     private FanCurveTableView fanCurveEditor;
+    @FXML
+    private StackPane chartContainer;
     @FXML
     private StackPane fanCurveEditorContainer;
     @FXML
@@ -73,9 +83,54 @@ public class FanCurvePane extends AnchorPane {
             throw new RuntimeException(exception);
         }
     }
+    /* A reference to the binding must be retained because JavaFX uses weak
+     * listeners. This would otherwise be garbage collected. */
+    private ListBinding<XYChart.Data<Double, Double>> chartSeriesBinding;
 
     @FXML
     private void initialize() {
+        NumberAxis sensorAxis = new NumberAxis();
+        sensorAxis.labelProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
+            if (selFanCurve == null) {
+                /* This is never visible */
+                return "";
+            } else {
+                return selFanCurve.getSensor().getName() + " (" + selFanCurve.getSensor().getMeasurementUnit() + ")";
+            }
+        }));
+        NumberAxis fanAxis = new NumberAxis();
+        fanAxis.labelProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
+            if (selFanCurve == null) {
+                /* This is never visible */
+                return "";
+            } else {
+                return selFanCurve.getFanController().getName() + " (" + selFanCurve.getFanController().getMeasurementUnit() + ")";
+            }
+        }));
+
+        XYChart.Series<Double, Double> chartSeries = new XYChart.Series<>();
+        chartSeries.setName("Fan curve");
+
+        /* There are two layers of mapping here. First the selected fan curve is
+         * mapped to a list of change points, then each change point in the list
+         * is mapped from a Mapping object to a XYChart.Data object. */
+        chartSeriesBinding = new ObservableListBinding<>(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
+            if (selFanCurve == null) {
+                /* This is never visible */
+                return FXCollections.<XYChart.Data<Double, Double>>emptyObservableList();
+            } else {
+                return EasyBind.map(selFanCurve.changePointsProperty(), (Mapping m) -> {
+                    return new XYChart.Data<>(m.key, m.value);
+                });
+            }
+        }));
+        Bindings.bindContent(chartSeries.getData(), chartSeriesBinding);
+
+        chart = new LineChart(sensorAxis, fanAxis);
+        chartContainer.getChildren().add(chart);
+        chart.getData().add(chartSeries);
+        chart.setAnimated(false);
+
         fanCurveEditor = new FanCurveTableView();
         fanCurveEditorContainer.getChildren().add(fanCurveEditor);
 

@@ -33,39 +33,35 @@ THE SOFTWARE.
 <?import javafx.scene.layout.StackPane?>
 
 <fx:root id="AnchorPane" prefHeight="600.0" prefWidth="800.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <center>
-            <SplitPane dividerPositions="0.7">
-               <items>
-                  <AnchorPane>
-                     <children>
-                        <Label text="Chart here" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
-                     </children>
-                  </AnchorPane>
-                  <StackPane fx:id="fanCurveEditorContainer" />
-               </items>
-            </SplitPane>
-         </center>
-         <top>
-            <AnchorPane BorderPane.alignment="CENTER">
-               <children>
-                  <BorderPane AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
-                     <right>
-                        <Button fx:id="saveButton" mnemonicParsing="false" text="Save" BorderPane.alignment="CENTER" />
-                     </right>
-                     <center>
-                        <HBox alignment="CENTER_LEFT" spacing="14.0" BorderPane.alignment="CENTER">
-                           <children>
-                              <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete fan curve" />
-                              <Label fx:id="infoLabel" text="infoLabel" />
-                           </children>
-                        </HBox>
-                     </center>
-                  </BorderPane>
-               </children>
-            </AnchorPane>
-         </top>
-      </BorderPane>
-   </children>
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+                <SplitPane dividerPositions="0.7">
+                    <items>
+                        <StackPane fx:id="chartContainer" />
+                        <StackPane fx:id="fanCurveEditorContainer" />
+                    </items>
+                </SplitPane>
+            </center>
+            <top>
+                <AnchorPane BorderPane.alignment="CENTER">
+                    <children>
+                        <BorderPane AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
+                            <right>
+                                <Button fx:id="saveButton" mnemonicParsing="false" text="Save" BorderPane.alignment="CENTER" />
+                            </right>
+                            <center>
+                                <HBox alignment="CENTER_LEFT" spacing="14.0" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete fan curve" />
+                                        <Label fx:id="infoLabel" text="infoLabel" />
+                                    </children>
+                                </HBox>
+                            </center>
+                        </BorderPane>
+                    </children>
+                </AnchorPane>
+            </top>
+        </BorderPane>
+    </children>
 </fx:root>
