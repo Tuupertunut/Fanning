@@ -28,5 +28,8 @@
 | 10.12 | 6h   | muokattavan taulukon debuggaus |
 | 11.12 | 7h   | muokattava taulukko vihdoin valmis |
 | 11.12 | 2h   | dokumentaatio |
+| 12.12 | 7h   | fan curve käyttämään listaa |
+| 13.12 | 2h   | json-tallennus |
+| 14.12 | 4h   | json-tallennus |
 
-Yhteensä 105h
+Yhteensä 118h
