@@ -47,7 +47,7 @@ public class MockHardwareManager implements HardwareManager {
 
     public MockHardwareManager() {
         MockSensor sa = new MockSensor("fake cpu core1 temp", "sct1", "Temperature", "°C");
-        MockSensor sb = new MockSensor("fake cpu core2 temp ", "sct2", "Temperature", "°C");
+        MockSensor sb = new MockSensor("fake cpu core2 temp", "sct2", "Temperature", "°C");
         MockSensor sc = new MockSensor("fake cpu voltage", "scv", "Voltage", "V");
         MockSensor sd = new MockSensor("fake cpu fan speed", "scf", "Fan speed", "RPM");
         MockSensor se = new MockSensor("fake cpu fan percent", "scp", "Control", "%");
