@@ -28,11 +28,14 @@ import com.github.tuupertunut.fanning.core.FanningService;
 import com.github.tuupertunut.fanning.core.Mapping;
 import com.github.tuupertunut.fanning.util.ObservableListBinding;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Optional;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ListBinding;
+import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,6 +48,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import org.fxmisc.easybind.EasyBind;
 
 /**
@@ -111,17 +115,31 @@ public class FanCurvePane extends AnchorPane {
         XYChart.Series<Double, Double> chartSeries = new XYChart.Series<>();
         chartSeries.setName("Fan curve");
 
-        /* There are two layers of mapping here. First the selected fan curve is
-         * mapped to a list of change points, then each change point in the list
-         * is mapped from a Mapping object to a XYChart.Data object. */
+        /* There are many layers of mapping here. First the selected fan curve
+         * is mapped to a list of change points, then the change points are
+         * sorted, then the change point list is mapped to a list of chart
+         * points. */
         chartSeriesBinding = new ObservableListBinding<>(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
             if (selFanCurve == null) {
                 /* This is never visible */
-                return FXCollections.<XYChart.Data<Double, Double>>emptyObservableList();
+                return FXCollections.emptyObservableList();
             } else {
-                return EasyBind.map(selFanCurve.changePointsProperty(), (Mapping m) -> {
-                    return new XYChart.Data<>(m.key, m.value);
-                });
+                return new ObservableListBinding<>(EasyBind.map(new ReadOnlyListWrapper<>(selFanCurve.changePointsProperty().sorted(Comparator.comparingDouble((Mapping m) -> m.key))), (ObservableList<Mapping> changePoints) -> {
+
+                    ObservableList<XYChart.Data<Double, Double>> chartPoints = FXCollections.observableArrayList();
+                    for (int i = 0; i < changePoints.size(); i++) {
+                        Mapping m = changePoints.get(i);
+                        if (i > 0) {
+                            Mapping prev = changePoints.get(i - 1);
+                            XYChart.Data<Double, Double> midDataPoint = new XYChart.Data<>(m.key, prev.value);
+                            /* Making the node invisible with 0 size rectangle. */
+                            midDataPoint.setNode(new Rectangle());
+                            chartPoints.add(midDataPoint);
+                        }
+                        chartPoints.add(new XYChart.Data<>(m.key, m.value));
+                    }
+                    return chartPoints;
+                }));
             }
         }));
         Bindings.bindContent(chartSeries.getData(), chartSeriesBinding);
