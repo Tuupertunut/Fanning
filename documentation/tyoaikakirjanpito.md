@@ -31,5 +31,7 @@
 | 12.12 | 7h   | fan curve käyttämään listaa |
 | 13.12 | 2h   | json-tallennus |
 | 14.12 | 4h   | json-tallennus |
+| 17.12 | 8h   | fan curven kuvaaja |
+| 20.12 | 9h   | fan curven kuvaaja |
 
-Yhteensä 118h
+Yhteensä 135h
