@@ -94,6 +94,7 @@ public class FanCurvePane extends AnchorPane {
     @FXML
     private void initialize() {
         NumberAxis sensorAxis = new NumberAxis();
+        sensorAxis.setForceZeroInRange(false);
         sensorAxis.labelProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
             if (selFanCurve == null) {
                 /* This is never visible */
@@ -103,6 +104,7 @@ public class FanCurvePane extends AnchorPane {
             }
         }));
         NumberAxis fanAxis = new NumberAxis();
+        fanAxis.setForceZeroInRange(false);
         fanAxis.labelProperty().bind(EasyBind.map(selectedFanCurveProperty, (FanCurve selFanCurve) -> {
             if (selFanCurve == null) {
                 /* This is never visible */
