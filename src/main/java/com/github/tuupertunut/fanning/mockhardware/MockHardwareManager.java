@@ -41,8 +41,6 @@ public class MockHardwareManager implements HardwareManager {
 
     public MockHardwareManager(HardwareItem hwRoot) {
         this.hwRoot = hwRoot;
-
-        updateHardwareTree();
     }
 
     public MockHardwareManager() {
@@ -61,8 +59,6 @@ public class MockHardwareManager implements HardwareManager {
         MockHardwareItem hb = new MockHardwareItem(Arrays.asList(), Arrays.asList(sf, sg, sh), Arrays.asList(fb), "fake gpu", "hg");
 
         hwRoot = new MockHardwareItem(Arrays.asList(ha, hb), Arrays.asList(), Arrays.asList(), "computer", "c");
-
-        updateHardwareTree();
     }
 
     @Override

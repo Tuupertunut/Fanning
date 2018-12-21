@@ -27,6 +27,7 @@ import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -48,8 +49,6 @@ public class FanningService {
         this.hardwareManager = hardwareManager;
         this.storage = storage;
         this.fanCurves = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-        initUpdater();
     }
 
     public void loadFromStorage() throws IOException, JsonException {
@@ -60,12 +59,14 @@ public class FanningService {
         storage.store(fanCurves);
     }
 
-    private void initUpdater() {
+    public void initUpdater(Duration updateRate) {
+        /* Making a daemon thread, so it will automatically die when the main
+         * thread dies. */
         Executors.newSingleThreadScheduledExecutor((Runnable r) -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setDaemon(true);
             return thread;
-        }).scheduleAtFixedRate(this::update, 1, 1, TimeUnit.SECONDS);
+        }).scheduleAtFixedRate(this::update, 0, updateRate.toNanos(), TimeUnit.NANOSECONDS);
     }
 
     private void update() {

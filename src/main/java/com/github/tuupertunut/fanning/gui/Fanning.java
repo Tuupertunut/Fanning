@@ -30,6 +30,7 @@ import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.mockhardware.MockHardwareManager;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -48,6 +49,7 @@ public class Fanning extends Application {
         Storage jsonStorage = new JsonStorage(hwManager, getPlatformSpecificConfigDir().resolve("Fanning/fanCurves.json"));
         fanningService = new FanningService(hwManager, jsonStorage);
         fanningService.loadFromStorage();
+        fanningService.initUpdater(Duration.ofSeconds(1));
     }
 
     /* Apache commons says this is a valid way to detect the operating system.
