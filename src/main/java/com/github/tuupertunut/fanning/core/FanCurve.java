@@ -59,7 +59,7 @@ public class FanCurve {
         return changePoints;
     }
 
-    public OptionalDouble getTargetValueAt(double sensorValue) {
+    public OptionalDouble getFanValueAt(double sensorValue) {
         Mapping closestBelow = null;
         Mapping smallest = null;
         for (Mapping m : changePoints) {

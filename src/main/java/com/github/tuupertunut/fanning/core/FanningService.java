@@ -73,7 +73,7 @@ public class FanningService {
         hardwareManager.updateHardwareTree();
         for (FanCurve fanCurve : fanCurves) {
             double sensorValue = fanCurve.getSensor().valueProperty().get();
-            fanCurve.getFanController().controlledValueProperty().set(fanCurve.getTargetValueAt(sensorValue));
+            fanCurve.getFanController().controlledValueProperty().set(fanCurve.getFanValueAt(sensorValue));
         }
     }
 
