@@ -30,8 +30,6 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 import com.github.tuupertunut.fanning.hwinterface.FanController;
 import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import com.github.tuupertunut.fanning.hwinterface.Sensor;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -54,16 +52,8 @@ public class JsonStorage implements Storage {
         this.filePath = filePath;
     }
 
-    @Override
-    public List<FanCurve> load() throws IOException, JsonException {
-        if (Files.notExists(filePath)) {
-            return Arrays.asList();
-        }
-
-        JsonArray jsonFanCurves;
-        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
-            jsonFanCurves = (JsonArray) Jsoner.deserialize(reader);
-        }
+    List<FanCurve> fromJson(String json) throws JsonException {
+        JsonArray jsonFanCurves = (JsonArray) Jsoner.deserialize(json);
 
         List<FanCurve> fanCurves = new ArrayList<>();
         for (Object jsonFanCurveObj : jsonFanCurves) {
@@ -87,8 +77,7 @@ public class JsonStorage implements Storage {
         return fanCurves;
     }
 
-    @Override
-    public void store(List<FanCurve> fanCurves) throws IOException {
+    String toJson(List<FanCurve> fanCurves) {
         JsonArray jsonFanCurves = new JsonArray();
         for (FanCurve fanCurve : fanCurves) {
             JsonObject jsonFanCurve = new JsonObject();
@@ -110,9 +99,25 @@ public class JsonStorage implements Storage {
             jsonFanCurves.add(jsonFanCurve);
         }
 
-        Files.createDirectories(filePath.getParent());
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-            Jsoner.serialize(jsonFanCurves, writer);
+        return Jsoner.serialize(jsonFanCurves);
+    }
+
+    @Override
+    public List<FanCurve> load() throws IOException, JsonException {
+        if (Files.notExists(filePath)) {
+            return Arrays.asList();
         }
+
+        String json = String.join("\n", Files.readAllLines(filePath));
+
+        return fromJson(json);
+    }
+
+    @Override
+    public void store(List<FanCurve> fanCurves) throws IOException {
+        String json = toJson(fanCurves);
+
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, Arrays.asList(json));
     }
 }
