@@ -29,6 +29,7 @@ import com.github.tuupertunut.fanning.hwinterface.HardwareManager;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.beans.property.ListProperty;
@@ -71,9 +72,15 @@ public class FanningService {
 
     void update() {
         hardwareManager.updateHardwareTree();
-        for (FanCurve fanCurve : fanCurves) {
-            double sensorValue = fanCurve.getSensor().valueProperty().get();
-            fanCurve.getFanController().controlledValueProperty().set(fanCurve.getFanValueAt(sensorValue));
+        for (FanController fan : hardwareManager.getAllFanControllers()) {
+            Optional<FanCurve> optFanCurve = findCurveOfFan(fan);
+            if (optFanCurve.isPresent()) {
+                FanCurve fanCurve = optFanCurve.get();
+                double sensorValue = fanCurve.getSensor().valueProperty().get();
+                fan.controlledValueProperty().set(fanCurve.getFanValueAt(sensorValue));
+            } else {
+                fan.controlledValueProperty().set(OptionalDouble.empty());
+            }
         }
     }
 
