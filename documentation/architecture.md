@@ -2,7 +2,7 @@
 
 ![uml diagram](uml.png)
 
-<!-- [FanningService]-1>[HardwareManager], [HardwareManager]-1>[HardwareItem], [HardwareItem]-*>[HardwareItem], [HardwareItem]-*>[Sensor], [HardwareItem]-*>[FanController], [FanController]-1>[Sensor], [FanningService]-*>[FanCurve], [FanCurve]-1>[Sensor], [FanCurve]-1>[FanController], [HardwareItem]-.->[<<interface>>;HardwareTreeElement], [Sensor]-.->[<<interface>>;HardwareTreeElement], [FanController]-.->[<<interface>>;HardwareTreeElement] -->
+<!-- [FanningService]-1>[HardwareManager], [HardwareManager]-1>[HardwareItem], [HardwareItem]-*>[HardwareItem], [HardwareItem]-*>[Sensor], [HardwareItem]-*>[FanController], [FanController]-1>[Sensor], [FanningService]-*>[FanCurve], [FanCurve]-1>[Sensor], [FanCurve]-1>[FanController], [HardwareItem]-.->[<<interface>>;HardwareTreeElement], [Sensor]-.->[<<interface>>;HardwareTreeElement], [FanController]-.->[<<interface>>;HardwareTreeElement], [FanCurve]-*>[Mapping], [FanningService]-1>[Storage] -->
 
 ## Structure
 
@@ -10,7 +10,7 @@ There are four main parts in the software.
 
 - Hardware interface handles communication with a hardware sensor library.
 - Mock hardware is a mock implementation for the hardware interface.
-- Core package handles the data model of the software, permanent storage (soon) and controlling the hardware (soon).
+- Core package handles the data model of the software, permanent storage and controlling the hardware.
 - GUI presents the functions of the core package to the user.
 
 Fanning uses the JavaFX property pattern extensively. Properties are observable boxes around variables, that can be bound to follow the values of each other automatically. Constantly changing variables, such as sensor values and GUI text field texts can then be bound to each other.
@@ -30,11 +30,17 @@ The hardware interface is meant to be implemented by various sensor library adap
 
 ## Mock hardware
 
-Since testing the software is hard with a platform specific real sensor library, Fanning includes a mock hardware for testing and development purposes. It generates random sensor values and its fans respond to being controlled.
+Since testing the software is hard with a platform specific real sensor library, Fanning includes a mock hardware for testing and development purposes. It generates random sensor values and its fans respond to being controlled. As long as there is no real sensor library adapters, the mock hardware is also included in the release.
 
 ## Core
 
-The FanningService class is the entry point to all the core functionality. It currently only contains a list of all the fan curves and the hardware manager.
+The FanningService class is the entry point to all the core functionality. It controls the fans based on the fan curves and sensor values. There is an ExecutorService which acts as an updater. It periodically calls the hardware manager to update sensor values and then controls the fans based on the fan curves. It contains the list of fan curves and a reference to a Storage service, which handles the permanent storage of the fan curves.
+
+Storage is an interface to make unit testing easier. The actual implementation that is used is JsonStorage. JsonStorage stores the fan curves into a JSON file, which is given as a parameter. By default it is a file in the OS specific user config directory.
+
+- Windows: ~/AppData/Local/
+- Mac OS X: ~/Library/Application Support/
+- Linux: ~/.config/
 
 ## GUI
 
