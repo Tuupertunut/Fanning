@@ -34,5 +34,6 @@
 | 17.12 | 8h   | fan curven kuvaaja |
 | 20.12 | 9h   | fan curven kuvaaja |
 | 21.12 | 7h   | fan curvejen noudattaminen ja testit |
+| 22.12 | 7h   | testit ja dokumentaatio |
 
-Yhteensä 142h
+Yhteensä 149h
