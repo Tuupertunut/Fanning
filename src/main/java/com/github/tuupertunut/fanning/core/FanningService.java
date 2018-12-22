@@ -69,7 +69,7 @@ public class FanningService {
         }).scheduleAtFixedRate(this::update, 0, updateRate.toNanos(), TimeUnit.NANOSECONDS);
     }
 
-    private void update() {
+    void update() {
         hardwareManager.updateHardwareTree();
         for (FanCurve fanCurve : fanCurves) {
             double sensorValue = fanCurve.getSensor().valueProperty().get();
