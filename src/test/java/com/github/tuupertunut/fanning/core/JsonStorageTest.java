@@ -95,4 +95,17 @@ public class JsonStorageTest {
         Assert.assertEquals(5.0, fanCurves.get(0).changePointsProperty().get(0).key, 0);
         Assert.assertEquals(6.5, fanCurves.get(0).changePointsProperty().get(0).value, 0);
     }
+
+    @Test
+    public void testFromJsonWithInvalidJson() {
+        String json = "[";
+        try {
+            List<FanCurve> fanCurves = storage.fromJson(json);
+
+            /* Fail if there was no exception. */
+            Assert.fail();
+        } catch (JsonException ex) {
+            /* This should happen. */
+        }
+    }
 }
