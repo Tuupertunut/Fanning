@@ -43,12 +43,13 @@ import org.junit.Test;
 public class FanningServiceTest {
 
     MockHardwareManager hwManager;
+    MockSensor sct1;
     MockFanController fg;
     FanningService fanningService;
 
     @Before
     public void setUp() {
-        MockSensor sct1 = new MockSensor("fake cpu core1 temp", "sct1", "Temperature", "°C");
+        sct1 = new MockSensor("fake cpu core1 temp", "sct1", "Temperature", "°C");
         MockHardwareItem hc = new MockHardwareItem(Arrays.asList(), Arrays.asList(sct1), Arrays.asList(), "fake cpu", "hc");
 
         MockSensor sgp = new MockSensor("fake gpu fan percent", "sgp", "Control", "%");
@@ -63,7 +64,7 @@ public class FanningServiceTest {
         Storage storage = new Storage() {
             @Override
             public List<FanCurve> load() throws IOException, JsonException {
-                return Arrays.asList(new FanCurve(hwManager.findSensorById("sct1").get(), hwManager.findFanControllerById("fg").get(), Arrays.asList(new Mapping(5.0, 6.5))));
+                return Arrays.asList(new FanCurve(sct1, fg, Arrays.asList(new Mapping(5.0, 6.5))));
             }
 
             @Override
@@ -94,6 +95,13 @@ public class FanningServiceTest {
         fanningService.update();
         Assert.assertNotEquals(OptionalDouble.empty(), fg.controlledValueProperty().get());
         fanningService.fanCurvesProperty().clear();
+        fanningService.update();
+        Assert.assertEquals(OptionalDouble.empty(), fg.controlledValueProperty().get());
+    }
+
+    @Test
+    public void testUpdateDoesNotMakeFanFollowEmptyFanCurve() throws IOException, JsonException {
+        fanningService.fanCurvesProperty().add(new FanCurve(sct1, fg, Arrays.asList()));
         fanningService.update();
         Assert.assertEquals(OptionalDouble.empty(), fg.controlledValueProperty().get());
     }

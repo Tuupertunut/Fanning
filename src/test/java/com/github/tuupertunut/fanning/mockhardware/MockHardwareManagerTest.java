@@ -65,5 +65,8 @@ public class MockHardwareManagerTest {
         fg.controlledValueProperty().set(OptionalDouble.of(-Double.MAX_VALUE));
         hwManager.updateHardwareTree();
         Assert.assertEquals(-Double.MAX_VALUE, fg.getSensor().valueProperty().get(), 0);
+        fg.controlledValueProperty().set(OptionalDouble.empty());
+        hwManager.updateHardwareTree();
+        Assert.assertNotEquals(-Double.MAX_VALUE, fg.getSensor().valueProperty().get(), 0);
     }
 }
