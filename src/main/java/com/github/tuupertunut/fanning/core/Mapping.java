@@ -24,10 +24,10 @@
 package com.github.tuupertunut.fanning.core;
 
 /**
+ * Simple key to value mapping. Objects are immutable.
  *
  * @author Tuupertunut
  */
-
 public class Mapping {
 
     public final double key;

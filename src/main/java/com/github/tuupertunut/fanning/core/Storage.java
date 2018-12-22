@@ -28,12 +28,26 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * A service for permanently storing fan curves.
  *
  * @author Tuupertunut
  */
 public interface Storage {
 
+    /**
+     * Loads a list of fan curves from the storage.
+     *
+     * @return a list of fan curves.
+     * @throws IOException
+     * @throws JsonException
+     */
     List<FanCurve> load() throws IOException, JsonException;
 
+    /**
+     * Stores a list of fan curves into the storage.
+     *
+     * @param fanCurves a list of fan curves.
+     * @throws IOException
+     */
     void store(List<FanCurve> fanCurves) throws IOException;
 }

@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * A storage that stores fan curves into a JSON file.
  *
  * @author Tuupertunut
  */
@@ -47,6 +48,13 @@ public class JsonStorage implements Storage {
     private final HardwareManager hwManager;
     private final Path filePath;
 
+    /**
+     * Creates a new JsonStorage.
+     *
+     * @param hwManager the hardware manager for finding the hardware described
+     * in the JSON.
+     * @param filePath the file path where the JSON file should be.
+     */
     public JsonStorage(HardwareManager hwManager, Path filePath) {
         this.hwManager = hwManager;
         this.filePath = filePath;
@@ -102,6 +110,14 @@ public class JsonStorage implements Storage {
         return Jsoner.serialize(jsonFanCurves);
     }
 
+    /**
+     * Loads fan curves from the JSON file. If the file doesn't exist yet,
+     * returns an empty list.
+     *
+     * @return a list of fan curves.
+     * @throws IOException if there was IOException reading the file.
+     * @throws JsonException if the JSON was invalid.
+     */
     @Override
     public List<FanCurve> load() throws IOException, JsonException {
         if (Files.notExists(filePath)) {
@@ -113,6 +129,13 @@ public class JsonStorage implements Storage {
         return fromJson(json);
     }
 
+    /**
+     * Stores fan curves into the JSON file. This will overwrite any previous
+     * content in the file.
+     *
+     * @param fanCurves a list of fan curves.
+     * @throws IOException if there was IOException writing the file.
+     */
     @Override
     public void store(List<FanCurve> fanCurves) throws IOException {
         String json = toJson(fanCurves);

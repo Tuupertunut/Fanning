@@ -24,12 +24,23 @@
 package com.github.tuupertunut.fanning.hwinterface;
 
 /**
+ * A common interface for all the elements of the hardware tree.
  *
  * @author Tuupertunut
  */
 public interface HardwareTreeElement {
 
+    /**
+     * Returns the unique id of this hardware tree element.
+     *
+     * @return the unique id of this hardware tree element.
+     */
     String getId();
 
+    /**
+     * Returns the display name for this hardware tree element.
+     *
+     * @return the display name for this hardware tree element.
+     */
     String getName();
 }

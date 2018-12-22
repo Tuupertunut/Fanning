@@ -26,14 +26,31 @@ package com.github.tuupertunut.fanning.hwinterface;
 import java.util.List;
 
 /**
+ * A hardware item, which may contain multiple sensors, fan controllers and
+ * subhardware.
  *
  * @author Tuupertunut
  */
 public interface HardwareItem extends HardwareTreeElement {
 
+    /**
+     * Returns the subhardware of this hardware item.
+     *
+     * @return a list of subhardware.
+     */
     List<HardwareItem> getSubHardware();
 
+    /**
+     * Returns the sensors of this hardware item.
+     *
+     * @return a list of sensors.
+     */
     List<Sensor> getSensors();
 
+    /**
+     * Returns the fan controllers of this hardware item.
+     *
+     * @return a list of fan controllers.
+     */
     List<FanController> getFanControllers();
 }

@@ -37,6 +37,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 
 /**
+ * The entry point to the software. Controls fans based on the fan curves.
  *
  * @author Tuupertunut
  */
@@ -46,20 +47,43 @@ public class FanningService {
     private final Storage storage;
     private final ListProperty<FanCurve> fanCurves;
 
+    /**
+     * Creates a new FanningService.
+     *
+     * @param hardwareManager the service for using the hardware.
+     * @param storage the service for permanently storing the fan curves.
+     */
     public FanningService(HardwareManager hardwareManager, Storage storage) {
         this.hardwareManager = hardwareManager;
         this.storage = storage;
         this.fanCurves = new SimpleListProperty<>(FXCollections.observableArrayList());
     }
 
+    /**
+     * Loads fan curves from the storage.
+     *
+     * @throws IOException
+     * @throws JsonException
+     */
     public void loadFromStorage() throws IOException, JsonException {
         fanCurves.setAll(storage.load());
     }
 
+    /**
+     * Stores the fan curves into the storage.
+     *
+     * @throws IOException
+     */
     public void storeToStorage() throws IOException {
         storage.store(fanCurves);
     }
 
+    /**
+     * Starts the update loop at the given rate. The update loop will query the
+     * hardware for new sensor data and control fans based on the fan curves.
+     *
+     * @param updateRate how often to update.
+     */
     public void initUpdater(Duration updateRate) {
         /* Making a daemon thread, so it will automatically die when the main
          * thread dies. */
@@ -92,6 +116,12 @@ public class FanningService {
         return fanCurves;
     }
 
+    /**
+     * Returns the fan curve which controls the given fan, if there is one.
+     *
+     * @param fan
+     * @return the fan curve which controls the fan, or empty if there is none.
+     */
     public Optional<FanCurve> findCurveOfFan(FanController fan) {
         for (FanCurve curve : fanCurves) {
             if (curve.getFanController().equals(fan)) {

@@ -32,6 +32,8 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 
 /**
+ * A set of mappings from sensor values to fan controller values. This can be
+ * used to control a fan.
  *
  * @author Tuupertunut
  */
@@ -41,6 +43,13 @@ public class FanCurve {
     private final FanController fanController;
     private final ListProperty<Mapping> changePoints;
 
+    /**
+     * Creates a new FanCurve.
+     *
+     * @param sensor the sensor to be used as source.
+     * @param fanController the fan to be used as target.
+     * @param changePoints mappings from sensor values to fan values.
+     */
     public FanCurve(Sensor sensor, FanController fanController, List<Mapping> changePoints) {
         this.sensor = sensor;
         this.fanController = fanController;
@@ -59,6 +68,18 @@ public class FanCurve {
         return changePoints;
     }
 
+    /**
+     * Gets the fan value that the sensor value maps to in the mappings. If
+     * there is a mapping for exactly the given sensor value, the fan value of
+     * the mapping will be returned. Otherwise it is the fan value of the
+     * previous (closest with lower sensor value) mapping. If the given sensor
+     * value is lower than the sensor values of all mappings, the fan value of
+     * the first mapping will be used. If there are no mappings, an empty
+     * optional is returned.
+     *
+     * @param sensorValue the value used to calculate the fan value.
+     * @return the calculated fan value.
+     */
     public OptionalDouble getFanValueAt(double sensorValue) {
         Mapping closestBelow = null;
         Mapping smallest = null;

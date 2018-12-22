@@ -26,14 +26,30 @@ package com.github.tuupertunut.fanning.hwinterface;
 import javafx.beans.value.ObservableDoubleValue;
 
 /**
+ * A sensor for measuring some value of the hardware.
  *
  * @author Tuupertunut
  */
 public interface Sensor extends HardwareTreeElement {
 
+    /**
+     * Returns the type of this sensor, such as "Temperature" or "Voltage".
+     *
+     * @return the type of this sensor.
+     */
     String getSensorType();
 
+    /**
+     * Returns the measurement unit of this sensor, such as "°C" or "V".
+     *
+     * @return the measurement unit of this sensor.
+     */
     String getMeasurementUnit();
 
+    /**
+     * The observable box of the value of the sensor. This is always a double.
+     *
+     * @return the observable box of the value of the sensor.
+     */
     ObservableDoubleValue valueProperty();
 }

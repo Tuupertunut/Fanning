@@ -29,13 +29,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ * A binding that presents {@code ObservableValue<ObservableList<T>>} as one
+ * {@code ObservableList<T>}.
  *
  * @author Tuupertunut
+ * @param <T> the element type of the ObservableList.
  */
 public class ObservableListBinding<T> extends ListBinding<T> {
 
     ObservableValue<ObservableList<T>> source;
 
+    /**
+     * Creates a new binding.
+     *
+     * @param source the {@code ObservableValue<ObservableList<T>>} to wrap.
+     */
     public ObservableListBinding(ObservableValue<ObservableList<T>> source) {
         this.source = source;
         this.bind(source);

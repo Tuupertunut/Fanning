@@ -30,15 +30,30 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * A service for using the hardware.
  *
  * @author Tuupertunut
  */
 public interface HardwareManager {
 
+    /**
+     * Fetches and updates new values to all sensors.
+     */
     void updateHardwareTree();
 
+    /**
+     * Returns the root of the hardware tree.
+     *
+     * @return the root of the hardware tree.
+     */
     HardwareItem getHardwareRoot();
 
+    /**
+     * Returns a list of all sensors in the hardware tree. The sensors are in
+     * depth-first order.
+     *
+     * @return all sensors in the hardware tree.
+     */
     default List<Sensor> getAllSensors() {
         List<Sensor> sensors = new ArrayList<>();
 
@@ -62,6 +77,12 @@ public interface HardwareManager {
         return sensors;
     }
 
+    /**
+     * Returns a list of all fan controllers in the hardware tree. The fan
+     * controllers are in depth-first order.
+     *
+     * @return all fan controllers in the hardware tree.
+     */
     default List<FanController> getAllFanControllers() {
         List<FanController> fans = new ArrayList<>();
 
@@ -85,6 +106,12 @@ public interface HardwareManager {
         return fans;
     }
 
+    /**
+     * Returns a list of all hardware in the hardware tree. The hardware are in
+     * depth-first order.
+     *
+     * @return all hardware in the hardware tree.
+     */
     default List<HardwareItem> getAllHardware() {
         List<HardwareItem> hardware = new ArrayList<>();
 
@@ -108,6 +135,12 @@ public interface HardwareManager {
         return hardware;
     }
 
+    /**
+     * Returns the sensor that has the given id, if there is one.
+     *
+     * @param sensorId
+     * @return the sensor with the id, or empty if there is none.
+     */
     default Optional<Sensor> findSensorById(String sensorId) {
         for (Sensor sensor : getAllSensors()) {
             if (sensor.getId().equals(sensorId)) {
@@ -117,6 +150,12 @@ public interface HardwareManager {
         return Optional.empty();
     }
 
+    /**
+     * Returns the fan controller that has the given id, if there is one.
+     *
+     * @param fanControllerId
+     * @return the fan controller with the id, or empty if there is none.
+     */
     default Optional<FanController> findFanControllerById(String fanControllerId) {
         for (FanController fan : getAllFanControllers()) {
             if (fan.getId().equals(fanControllerId)) {
