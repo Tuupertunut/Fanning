@@ -33,5 +33,6 @@
 | 14.12 | 4h   | json-tallennus |
 | 17.12 | 8h   | fan curven kuvaaja |
 | 20.12 | 9h   | fan curven kuvaaja |
+| 21.12 | 7h   | fan curvejen noudattaminen ja testit |
 
-Yhteensä 135h
+Yhteensä 142h
